@@ -3,3 +3,4 @@
 .settings/
 .gradle/
 build/
+/bin

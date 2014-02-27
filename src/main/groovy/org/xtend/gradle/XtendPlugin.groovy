@@ -18,6 +18,9 @@ import org.gradle.api.plugins.JavaPluginConvention;
 import org.gradle.api.tasks.*;
 import org.gradle.plugins.ide.eclipse.EclipsePlugin;
 import org.gradle.plugins.ide.eclipse.model.EclipseModel;
+import org.xtend.gradle.tasks.XtendCompile;
+import org.xtend.gradle.tasks.XtendEclipseSettings;
+import org.xtend.gradle.tasks.XtendExtension;
 
 class XtendPlugin implements Plugin<Project> {
 
@@ -29,8 +32,7 @@ class XtendPlugin implements Plugin<Project> {
 	}
 
 	void apply(Project project) {
-		project.extensions.create("xtend", XtendExtension)
-		project.extensions.create("xtendRuntime", XtendRuntime, project)
+		project.extensions.create("xtend", XtendExtension, project)
 
 		project.plugins.apply(JavaPlugin)
 		JavaPluginConvention java = project.convention.getPlugin(JavaPluginConvention)
@@ -50,7 +52,7 @@ class XtendPlugin implements Plugin<Project> {
 					project.file("src/${sourceSet.getName()}/${project.extensions.xtend.sourceRelativeOutput}")
 				}
 				it.conventionMapping.xtendClasspath = {
-					project.extensions.xtendRuntime.inferXtendClasspath(sourceSet.compileClasspath)
+					project.extensions.xtend.inferXtendClasspath(sourceSet.compileClasspath)
 				}
 				it.setDescription("Compiles the ${sourceSet.getName()} Xtend sources")
 			}
@@ -64,91 +66,9 @@ class XtendPlugin implements Plugin<Project> {
 		eclipse.getProject().buildCommand("org.eclipse.xtext.ui.shared.xtextBuilder")
 		eclipse.getProject().natures("org.eclipse.xtext.ui.shared.xtextNature")
 		def settingsTask = project.task(type: XtendEclipseSettings, "xtendEclipseSettings")
+		settingsTask.conventionMapping.sourceRelativeOutput = {
+			project.extensions.xtend.sourceRelativeOutput
+		}
 		project.tasks[EclipsePlugin.ECLIPSE_TASK_NAME].dependsOn(settingsTask)
-	}
-}
-
-class XtendEclipseSettings extends DefaultTask {
-	@TaskAction
-	def writeSettings() {
-		project.file(".settings/org.eclipse.xtend.core.Xtend.prefs").write(
-		"""\
-		autobuilding=true
-		eclipse.preferences.version=1
-		is_project_specific=true
-		outlet.DEFAULT_OUTPUT.cleanDirectory=true
-		outlet.DEFAULT_OUTPUT.cleanupDerived=true
-		outlet.DEFAULT_OUTPUT.createDirectory=true
-		outlet.DEFAULT_OUTPUT.derived=true
-		outlet.DEFAULT_OUTPUT.directory=${project.convention.xtend.sourceRelativeOutput}
-		outlet.DEFAULT_OUTPUT.hideLocalSyntheticVariables=true
-		outlet.DEFAULT_OUTPUT.installDslAsPrimarySource=false
-		outlet.DEFAULT_OUTPUT.keepLocalHistory=false
-		outlet.DEFAULT_OUTPUT.override=true
-		""".stripIndent())
-	}
-}
-
-class XtendCompile extends DefaultTask {
-	@InputFiles
-	SourceDirectorySet srcDirs
-
-	@InputFiles
-	FileCollection classpath
-
-	@OutputDirectory
-	File targetDir
-
-	@Input
-	String encoding
-
-	@InputFiles
-	FileCollection xtendClasspath
-
-	//TODO more options (as soon as they are supported by Main)
-
-	//TODO allow using a daemon instead of forking a new process each time (this only makes sense once the compiler Main class caches the injector)
-	@TaskAction
-	def compile() {
-		def sourcePath = getSrcDirs().srcDirTrees.collect{it.dir.absolutePath}.join(File.pathSeparator)
-		def process = Runtime.runtime.exec("java -cp ${getXtendClasspath().asPath} org.eclipse.xtend.core.compiler.batch.Main -cp ${getClasspath().asPath} -d ${getTargetDir().absolutePath} -encoding ${getEncoding()} ${sourcePath}")
-		//TODO if there is an exception during injector creation, the subprocess hangs indefinitely
-		def exitCode = process.waitFor()
-		if (exitCode != 0) {
-			throw new GradleException("Xtend Compilation failed");
-		}
-	}
-}
-
-//TODO enhancement task, currently blocked because there is no simple Main class for this in xtend-core (instead it is "hidden" in the Maven plugin)
-
-class XtendExtension {
-	String sourceRelativeOutput = "xtend-gen"
-}
-
-class XtendRuntime {
-	Project project
-
-	XtendRuntime(Project project) {
-		this.project = project
-	}
-
-	def FileCollection inferXtendClasspath(FileCollection classpath) {
-		def pattern = Pattern.compile("org.eclipse.xtend.(core|lib)-(\\d.*?).jar")
-		project.files {
-			for (File file in classpath) {
-				def matcher = pattern.matcher(file.getName())
-				if (matcher.matches()) {
-					def version = matcher.group(2)
-					List<Dependency> dependencies = new ArrayList();
-					dependencies.add(project.getDependencies().create("org.eclipse.xtend:org.eclipse.xtend.core:${version}"));
-					if (version < "2.6.0") {
-						dependencies.add(project.getDependencies().create("org.eclipse.xtend:org.eclipse.xtend.lib:${version}"));
-					}
-					return project.getConfigurations().detachedConfiguration(dependencies as Dependency[]);
-				}
-			}
-			throw new GradleException("Could not infer Xtend classpath, because no Xtend jar was found on the ${classpath} classpath")
-		}
 	}
 }
