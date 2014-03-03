@@ -1,0 +1,9 @@
+dependencies {
+  compile gradleApi()
+  compile 'com.android.tools.build:gradle:0.8.+'
+}
+
+uploadArchives.repositories.mavenDeployer.pom.project {
+  name 'Xtend Gradle Plugin'
+  description 'A Gradle Plugin for building Xtend projects'
+}

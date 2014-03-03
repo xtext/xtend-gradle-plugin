@@ -1,17 +1,16 @@
-apply plugin: 'groovy'
-apply plugin: 'eclipse'
-apply from: 'mavenRelease.gradle'
-
-group = "org.xtend"
-version = "0.0.1"
-
-repositories {
-  mavenCentral()
-}
-
-dependencies {
-  compile gradleApi()
-  compile localGroovy()
-  compile 'com.android.tools.build:gradle:0.8.+'
-  compile 'org.eclipse.xtend:org.eclipse.xtend.core:2.5.2'
+subprojects {
+  apply plugin: 'groovy'
+  apply plugin: 'eclipse'
+  apply from: '../mavenRelease.gradle'
+ 
+  group = "org.xtend"
+  version = "0.0.1"
+  
+  repositories {
+    mavenCentral()
+  }
+  
+  dependencies {
+    compile localGroovy()
+  }
 }

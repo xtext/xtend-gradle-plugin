@@ -32,9 +32,7 @@ uploadArchives {
             }
  
             pom.project {
-               name 'Xtend Gradle Plugin'
                packaging 'jar'
-               description 'A Gradle Plugin for building Xtend projects'
                url 'https://github.com/oehme/xtend-gradle-plugin'
  
                scm {
