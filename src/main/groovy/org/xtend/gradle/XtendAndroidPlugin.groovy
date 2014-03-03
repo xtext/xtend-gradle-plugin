@@ -49,7 +49,8 @@ class XtendAndroidPlugin implements Plugin<Project> {
 				XtendCompile xtendCompile = project.task(type: XtendCompile, compileTaskName)
 				xtendCompile.srcDirs = new DefaultSourceDirectorySet("xtend", fileResolver)
 				def sourceDirs = new ArrayList()
-				sourceDirs.addAll(variant.getSourceSets().collect{source-> source.javaDirectories}.flatten())
+				def javaDirs = variant.getSourceSets().collect{source-> source.javaDirectories}.flatten().grep{File dir -> dir.isDirectory()}
+				sourceDirs.addAll(javaDirs)
 				sourceDirs.addAll(variant.getAidlCompile().getSourceOutputDir())
 				sourceDirs.addAll(variant.getGenerateBuildConfig().getSourceOutputDir())
 				sourceDirs.addAll(variant.getRenderscriptCompile().getSourceOutputDir())
@@ -71,7 +72,7 @@ class XtendAndroidPlugin implements Plugin<Project> {
 					} catch(UnknownPluginException e) {
 						androidPlugin = project.plugins.getPlugin(LibraryPlugin)
 					}
-					xtendCompile.bootClasspath = androidPlugin.getRuntimeJarList().join(File.pathSeparator)
+					xtendCompile.classpath = xtendCompile.getClasspath() + project.files(androidPlugin.getRuntimeJarList() as String[])
 				}
 				xtendCompile.setDescription("Compiles the ${variant.getName()} Xtend sources")
 				variant.registerJavaGeneratingTask(xtendCompile, xtendCompile.getTargetDir())

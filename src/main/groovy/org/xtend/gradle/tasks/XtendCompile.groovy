@@ -27,22 +27,14 @@ class XtendCompile extends DefaultTask {
 	@InputFiles
 	FileCollection xtendClasspath
 
-	String bootClasspath
-
 	//TODO more options
 
 	//TODO allow using a daemon instead of forking a new process each time
 	@TaskAction
 	def compile() {
 		def sourcePath = getSrcDirs().srcDirTrees.collect{it.dir.absolutePath}.join(File.pathSeparator)
-		def command = ["java"]
-		if (bootClasspath != null) {
-			command += [
-				"-bootclasspath",
-				bootClasspath
-			]
-		}
-		command += [
+		def	command = [
+			"java",
 			"-cp",
 			getXtendClasspath().asPath,
 			"org.eclipse.xtend.core.compiler.batch.Main",
@@ -57,9 +49,13 @@ class XtendCompile extends DefaultTask {
 			sourcePath
 		]
 		def pb = new ProcessBuilder(command)
-		pb.redirectOutput(Redirect.INHERIT)
-		pb.redirectError(Redirect.INHERIT)
+		pb.redirectErrorStream(true)
 		def process = pb.start()
+		def input = new BufferedReader(new InputStreamReader(process.getInputStream()))
+		def line
+		while ((line = input.readLine()) != null) {
+			println(line)
+		}
 		def exitCode = process.waitFor()
 		if (exitCode != 0) {
 			throw new GradleException("Xtend Compilation failed");

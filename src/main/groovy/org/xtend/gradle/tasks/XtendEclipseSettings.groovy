@@ -18,7 +18,7 @@ class XtendEclipseSettings extends DefaultTask {
 		outlet.DEFAULT_OUTPUT.cleanupDerived=true
 		outlet.DEFAULT_OUTPUT.createDirectory=true
 		outlet.DEFAULT_OUTPUT.derived=true
-		outlet.DEFAULT_OUTPUT.directory=${sourceRelativeOutput}
+		outlet.DEFAULT_OUTPUT.directory=${getSourceRelativeOutput()}
 		outlet.DEFAULT_OUTPUT.hideLocalSyntheticVariables=true
 		outlet.DEFAULT_OUTPUT.installDslAsPrimarySource=false
 		outlet.DEFAULT_OUTPUT.keepLocalHistory=false
