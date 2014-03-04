@@ -33,6 +33,9 @@ class XtendEnhance extends DefaultTask {
 	
 	@Input
 	boolean useDaemon
+	
+	@Input
+	Integer daemonPort
 
 	@TaskAction
 	def enhance() {
@@ -66,7 +69,7 @@ class XtendEnhance extends DefaultTask {
 	}
 
 	def enhanceWithDaemon(List<String> arguments) {
-		def compiler = new XtendCompilerClient()
+		def compiler = new XtendCompilerClient(getDaemonPort())
 		compiler.requireServer(getXtendClasspath().asPath)
 		if (!compiler.enhance(arguments)) {
 			throw new GradleException("Installing debug information failed");

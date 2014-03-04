@@ -8,8 +8,14 @@ import com.google.common.collect.Lists;
 
 public class XtendCompilerClient {
 
-	// TODO make port configurable
-	private NailgunClient delegate = NailgunClient.onLocalHost(3032);
+	private NailgunClient delegate;
+
+	private int port;
+
+	public XtendCompilerClient(int port) {
+		this.port = port;
+		this.delegate = NailgunClient.onLocalHost(port);
+	}
 
 	public boolean compile(List<String> args) {
 		return delegate.send("compile", args, new File(""), System.out, System.err) == 0;
@@ -34,6 +40,7 @@ public class XtendCompilerClient {
 		command.add("-classpath");
 		command.add(classpath);
 		command.add("org.xtend.batch.daemon.XtendCompilerServer");
+		command.add(String.valueOf(port));
 		try {
 			Runtime.getRuntime().exec(command.toArray(new String[command.size()]));
 		} catch (Exception e) {

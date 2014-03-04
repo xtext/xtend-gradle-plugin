@@ -13,6 +13,7 @@ class XtendExtension {
 	boolean hideSyntheticVariables = true
 	boolean xtendAsPrimaryDebugSource = false
 	boolean useDaemon = false
+	int daemonPort = 3032
 
 	XtendExtension(Project project) {
 		this.project = project

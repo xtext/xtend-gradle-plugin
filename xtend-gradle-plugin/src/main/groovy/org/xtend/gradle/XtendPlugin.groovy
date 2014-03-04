@@ -55,6 +55,9 @@ class XtendPlugin implements Plugin<Project> {
 				it.conventionMapping.useDaemon = {
 					project.extensions.xtend.useDaemon
 				}
+				it.conventionMapping.daemonPort = {
+					project.extensions.xtend.daemonPort
+				}
 				it.conventionMapping.targetDir = {
 					project.file("src/${sourceSet.getName()}/${project.extensions.xtend.sourceRelativeOutput}")
 				}
@@ -82,6 +85,9 @@ class XtendPlugin implements Plugin<Project> {
 				}
 				it.conventionMapping.useDaemon = {
 					project.extensions.xtend.useDaemon
+				}
+				it.conventionMapping.daemonPort = {
+					project.extensions.xtend.daemonPort
 				}
 				it.conventionMapping.xtendClasspath = {
 					project.extensions.xtend.inferXtendClasspath(sourceSet.compileClasspath)

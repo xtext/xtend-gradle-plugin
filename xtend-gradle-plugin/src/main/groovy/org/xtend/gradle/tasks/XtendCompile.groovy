@@ -8,6 +8,7 @@ import org.gradle.api.file.FileCollection
 import org.gradle.api.file.SourceDirectorySet
 import org.gradle.api.tasks.Input
 import org.gradle.api.tasks.InputFiles
+import org.gradle.api.tasks.Optional;
 import org.gradle.api.tasks.OutputDirectory
 import org.gradle.api.tasks.TaskAction
 
@@ -29,6 +30,9 @@ class XtendCompile extends DefaultTask {
 
 	@Input
 	Boolean useDaemon
+	
+	@Input
+	Integer daemonPort
 
 	//TODO make tempdir configurable
 	@TaskAction
@@ -53,7 +57,7 @@ class XtendCompile extends DefaultTask {
 	}
 
 	def compileWithDaemon(List<String> arguments) {
-		def compiler = new XtendCompilerClient()
+		def compiler = new XtendCompilerClient(getDaemonPort())
 		compiler.requireServer(getXtendClasspath().asPath)
 		if (!compiler.compile(arguments)) {
 			throw new GradleException("Xtend Compilation failed");
