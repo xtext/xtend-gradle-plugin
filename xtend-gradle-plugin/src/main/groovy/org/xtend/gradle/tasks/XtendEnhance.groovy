@@ -31,10 +31,6 @@ class XtendEnhance extends DefaultTask {
 	@Input
 	boolean xtendAsPrimaryDebugSource;
 
-	/*
-	 * TODO this breaks incremental compilation, because it changes the output of the Java task, 
-	 * causing it to run again.
-	 */
 	@TaskAction
 	def enhance() {
 		if (!classesFolder.exists()) return

@@ -26,8 +26,8 @@ class XtendCompile extends DefaultTask {
 
 	@InputFiles
 	FileCollection xtendClasspath
-
-	//TODO more options
+	
+	//TODO make encoding and tempDir configurable via XtendXtension
 
 	//TODO allow using a daemon instead of forking a new process each time
 	@TaskAction

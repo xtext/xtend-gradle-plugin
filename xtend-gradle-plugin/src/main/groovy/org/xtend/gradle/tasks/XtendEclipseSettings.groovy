@@ -6,6 +6,8 @@ import org.gradle.api.tasks.TaskAction;
 class XtendEclipseSettings extends DefaultTask {
 	@Input
 	String sourceRelativeOutput
+	
+	//TODO make "hideSynthetic" and "primarySource" configurable via XtendXtension
 
 	@TaskAction
 	def writeSettings() {
