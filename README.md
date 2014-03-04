@@ -50,3 +50,8 @@ Now you just need xtend.lib and start coding.
       //or testCompile if you only want to use Xtend for some tests
       compile 'org.eclipse.xtend:org.eclipse.xtend.lib:2.5.2'
     }
+
+Limitations
+-----------
+
+This is a very early version which only works with the 2.5.x versions of Xtend. Also, the behaviour and API are all subject to change. Please file issues here if anything doesn't work as you would expect.
