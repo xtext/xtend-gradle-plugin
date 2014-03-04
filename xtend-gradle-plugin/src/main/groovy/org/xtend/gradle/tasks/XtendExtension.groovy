@@ -9,6 +9,9 @@ import org.gradle.api.file.FileCollection
 class XtendExtension {
 	Project project
 	String sourceRelativeOutput = "xtend-gen"
+	String encoding = "UTF-8"
+	boolean hideSyntheticVariables = true
+	boolean xtendAsPrimaryDebugSource = false
 
 	XtendExtension(Project project) {
 		this.project = project

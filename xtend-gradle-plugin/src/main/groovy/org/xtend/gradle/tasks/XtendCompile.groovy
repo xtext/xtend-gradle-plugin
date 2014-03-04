@@ -26,9 +26,8 @@ class XtendCompile extends DefaultTask {
 
 	@InputFiles
 	FileCollection xtendClasspath
-	
-	//TODO make encoding and tempDir configurable via XtendXtension
 
+	//TODO make tempdir configurable	
 	//TODO allow using a daemon instead of forking a new process each time
 	@TaskAction
 	def compile() {

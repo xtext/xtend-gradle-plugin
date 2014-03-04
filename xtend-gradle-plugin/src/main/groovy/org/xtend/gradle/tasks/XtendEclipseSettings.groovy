@@ -7,8 +7,12 @@ class XtendEclipseSettings extends DefaultTask {
 	@Input
 	String sourceRelativeOutput
 	
-	//TODO make "hideSynthetic" and "primarySource" configurable via XtendXtension
-
+	@Input
+	Boolean hideSyntheticVariables
+	
+	@Input
+	Boolean xtendAsPrimaryDebugSource
+	
 	@TaskAction
 	def writeSettings() {
 		project.file(".settings/org.eclipse.xtend.core.Xtend.prefs").write(
@@ -21,8 +25,8 @@ class XtendEclipseSettings extends DefaultTask {
 		outlet.DEFAULT_OUTPUT.createDirectory=true
 		outlet.DEFAULT_OUTPUT.derived=true
 		outlet.DEFAULT_OUTPUT.directory=${getSourceRelativeOutput()}
-		outlet.DEFAULT_OUTPUT.hideLocalSyntheticVariables=true
-		outlet.DEFAULT_OUTPUT.installDslAsPrimarySource=false
+		outlet.DEFAULT_OUTPUT.hideLocalSyntheticVariables=${getHideSyntheticVariables()}
+		outlet.DEFAULT_OUTPUT.installDslAsPrimarySource=${getXtendAsPrimaryDebugSource()}
 		outlet.DEFAULT_OUTPUT.keepLocalHistory=false
 		outlet.DEFAULT_OUTPUT.override=true
 		""".stripIndent())

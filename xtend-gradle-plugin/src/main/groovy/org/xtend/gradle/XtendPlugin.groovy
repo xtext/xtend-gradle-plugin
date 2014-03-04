@@ -49,7 +49,9 @@ class XtendPlugin implements Plugin<Project> {
 						}
 				it.srcDirs.source(sourceSet.getJava())
 				it.classpath = sourceSet.compileClasspath
-				it.encoding = "UTF-8"
+				it.conventionMapping.encoding = {
+					project.extensions.xtend.encoding
+				}
 				it.conventionMapping.targetDir = {
 					project.file("src/${sourceSet.getName()}/${project.extensions.xtend.sourceRelativeOutput}")
 				}
@@ -69,6 +71,12 @@ class XtendPlugin implements Plugin<Project> {
 			XtendEnhance enhanceTask = project.task(type: XtendEnhance, enhanceTaskName) {XtendEnhance it ->
 				it.targetFolder = classesDir
 				it.classesFolder = unenhancedClassesDir
+				it.conventionMapping.hideSyntheticVariables = {
+					project.extensions.xtend.hideSyntheticVariables
+				}
+				it.conventionMapping.xtendAsPrimaryDebugSource = {
+					project.extensions.xtend.xtendAsPrimaryDebugSource
+				}
 				it.conventionMapping.xtendClasspath = {
 					project.extensions.xtend.inferXtendClasspath(sourceSet.compileClasspath)
 				}
@@ -88,6 +96,12 @@ class XtendPlugin implements Plugin<Project> {
 		def settingsTask = project.task(type: XtendEclipseSettings, "xtendEclipseSettings")
 		settingsTask.conventionMapping.sourceRelativeOutput = {
 			project.extensions.xtend.sourceRelativeOutput
+		}
+		settingsTask.conventionMapping.hideSyntheticVariables = {
+			project.extensions.xtend.hideSyntheticVariables
+		}
+		settingsTask.conventionMapping.xtendAsPrimaryDebugSource = {
+			project.extensions.xtend.xtendAsPrimaryDebugSource
 		}
 		project.tasks[EclipsePlugin.ECLIPSE_TASK_NAME].dependsOn(settingsTask)
 	}
