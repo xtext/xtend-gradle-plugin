@@ -22,12 +22,14 @@ public class Main {
 		Iterator<String> arguments = Arrays.asList(args).iterator();
 		while (arguments.hasNext()) {
 			String argument = arguments.next();
-			if ("-d".equals(argument.trim())) {
+			if ("-o".equals(argument.trim())) {
 				installer.setOutputDirectory(new File(arguments.next().trim()));
 			} else if ("-hideSynthetic".equals(argument.trim())) {
 				installer.setHideSyntheticVariables(true);
 			} else if ("-xtendAsPrimary".equals(argument.trim())) {
 				installer.setXtendAsPrimaryDebugSource(true);
+			} else if ("-c".equals(argument.trim())) {
+				installer.setClassesDirectory(new File(arguments.next().trim()));
 			} else {
 				installer.getInputDirectories().add(new File(argument));
 			}

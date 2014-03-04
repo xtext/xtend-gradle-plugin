@@ -47,11 +47,20 @@ public class XtendDebugInfoInstaller {
 
 	private List<File> inputDirectories = Lists.newArrayList();
 	private File outputDirectory;
+	private File classesDirectory;
 	private boolean hideSyntheticVariables;
 	private boolean xtendAsPrimaryDebugSource;
 
 	public List<File> getInputDirectories() {
 		return inputDirectories;
+	}
+	
+	public File getClassesDirectory() {
+		return classesDirectory;
+	}
+	
+	public void setClassesDirectory(File classesDirectory) {
+		this.classesDirectory = classesDirectory;
 	}
 
 	public File getOutputDirectory() {
@@ -79,8 +88,8 @@ public class XtendDebugInfoInstaller {
 	}
 
 	public void installDebugInfo() {
-		Multimap<File, File> trace2class = createTraceToClassFileMap(inputDirectories, outputDirectory);
-		logStatus(outputDirectory, trace2class);
+		Multimap<File, File> trace2class = createTraceToClassFileMap(inputDirectories, classesDirectory);
+		logStatus(classesDirectory, trace2class);
 		installTraces(trace2class);
 	}
 
@@ -158,7 +167,9 @@ public class XtendDebugInfoInstaller {
 			for (File classFile : classFiles) {
 				if (getLogger().isDebugEnabled())
 					getLogger().debug("  " + classFile);
-				Files.write(traceToBytecodeInstaller.installTrace(Files.toByteArray(classFile)), classFile);
+				File outputFile = new File(classFile.getAbsolutePath().replace(classesDirectory.getAbsolutePath(), outputDirectory.getAbsolutePath()));
+				outputFile.getParentFile().mkdirs();
+				Files.write(traceToBytecodeInstaller.installTrace(Files.toByteArray(classFile)), outputFile);
 			}
 		} finally {
 			in.close();
@@ -186,4 +197,5 @@ public class XtendDebugInfoInstaller {
 	private Logger getLogger() {
 		return Logger.getLogger(getClass());
 	}
+
 }

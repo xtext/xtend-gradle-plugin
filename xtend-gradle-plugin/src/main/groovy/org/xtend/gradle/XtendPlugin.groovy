@@ -58,13 +58,17 @@ class XtendPlugin implements Plugin<Project> {
 				}
 				it.setDescription("Compiles the ${sourceSet.getName()} Xtend sources")
 			}
+			def JavaCompile javaCompile = project.tasks[sourceSet.compileJavaTaskName]
 			sourceSet.getJava().srcDir{compileTask.getTargetDir()}
-			project.tasks[sourceSet.compileJavaTaskName].dependsOn(compileTask)
+			javaCompile.dependsOn(compileTask)
 			project.tasks["clean"].dependsOn("clean" + compileTaskName.capitalize())
 
-			def enhanceTaskName = "install${sourceSet.getName()}XtendDebugInfo"
+			def classesDir = sourceSet.getOutput().getClassesDir()
+			def unenhancedClassesDir = new File(classesDir.absolutePath + "-unenhanced")
+			def enhanceTaskName = "install${sourceSet.getName().capitalize()}XtendDebugInfo"
 			XtendEnhance enhanceTask = project.task(type: XtendEnhance, enhanceTaskName) {XtendEnhance it ->
-				it.classesFolder = sourceSet.output.classesDir
+				it.targetFolder = classesDir
+				it.classesFolder = unenhancedClassesDir
 				it.conventionMapping.xtendClasspath = {
 					project.extensions.xtend.inferXtendClasspath(sourceSet.compileClasspath)
 				}
@@ -72,7 +76,8 @@ class XtendPlugin implements Plugin<Project> {
 					project.files(compileTask.getTargetDir())
 				}
 			}
-			enhanceTask.dependsOn(project.tasks[sourceSet.compileJavaTaskName])
+			javaCompile.setDestinationDir(unenhancedClassesDir)
+			enhanceTask.dependsOn(javaCompile)
 			project.tasks[sourceSet.classesTaskName].dependsOn(enhanceTask)
 		}
 

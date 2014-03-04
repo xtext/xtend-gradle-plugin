@@ -82,10 +82,14 @@ class XtendAndroidPlugin implements Plugin<Project> {
 				xtendCompile.dependsOn("generate${variant.name.capitalize()}Sources")
 				project.tasks["clean"].dependsOn("clean" + compileTaskName.capitalize())
 
-				def enhanceTaskName = "install${variant.getName()}XtendDebugInfo"
+				def classesDir = variant.getJavaCompile().getDestinationDir()
+				def unenhancedClassesDir = new File(classesDir.absolutePath + "-unenhanced")
+				variant.javaCompile.destinationDir = unenhancedClassesDir
+				def enhanceTaskName = "install${variant.getName().capitalize()}XtendDebugInfo"
 				XtendEnhance enhanceTask = project.task(type: XtendEnhance, enhanceTaskName)
 				enhanceTask.sourceFolders = project.files(xtendCompile.getTargetDir())
-				enhanceTask.classesFolder = variant.getJavaCompile().getDestinationDir()
+				enhanceTask.classesFolder = unenhancedClassesDir
+				enhanceTask.targetFolder = classesDir
 				enhanceTask.conventionMapping.xtendClasspath = {
 					project.extensions.xtend.inferXtendClasspath(variant.getJavaCompile().getClasspath())
 				}
@@ -94,15 +98,5 @@ class XtendAndroidPlugin implements Plugin<Project> {
 				variant.getAssemble().dependsOn(enhanceTask)
 			}
 		}
-
-		project.plugins.apply(EclipsePlugin)
-		def EclipseModel eclipse = project.extensions.getByType(EclipseModel)
-		eclipse.getProject().buildCommand("org.eclipse.xtext.ui.shared.xtextBuilder")
-		eclipse.getProject().natures("org.eclipse.xtext.ui.shared.xtextNature")
-		def settingsTask = project.task(type: XtendEclipseSettings, "xtendEclipseSettings")
-		settingsTask.conventionMapping.sourceRelativeOutput = {
-			project.extensions.xtend.sourceRelativeOutput
-		}
-		project.tasks[EclipsePlugin.ECLIPSE_TASK_NAME].dependsOn(settingsTask)
 	}
 }
