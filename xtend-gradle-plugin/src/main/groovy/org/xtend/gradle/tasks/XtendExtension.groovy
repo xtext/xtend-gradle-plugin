@@ -30,7 +30,7 @@ class XtendExtension {
 					dependencies.add(project.getDependencies().create("org.eclipse.xtend:org.eclipse.xtend.core:${version}"));
 					if (version < "2.6.0") {
 						dependencies.add(project.getDependencies().create("org.eclipse.xtend:org.eclipse.xtend.lib:${version}"));
-						dependencies.add(project.getDependencies().create("org.xtend:xtend-gradle-lib:0.0.3"))
+						dependencies.add(project.getDependencies().create("org.xtend:xtend-gradle-lib:0.0.4"))
 					}
 					return project.getConfigurations().detachedConfiguration(dependencies as Dependency[]);
 				}

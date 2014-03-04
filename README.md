@@ -10,6 +10,7 @@ Features
 
 - Compiles Xtend sources to Java
 - Enhances Java classes with Xtend debug information
+- A compiler daemon to speed up builds
 - Automatically downloads the correct Xtend compiler based on which version of xtend.lib you use
 - Supports both normal Java projects and the new Android build system
 - Hooks into 'gradle eclipse', so the Xtend compiler is configured for your project when you import it into Eclipse
@@ -24,7 +25,7 @@ Add the plugins to your build classpath
         mavenCentral()
       }
       dependencies {
-        classpath 'org.xtend:xtend-gradle-plugin:0.0.2'
+        classpath 'org.xtend:xtend-gradle-plugin:0.0.3'
       }
     }
 
@@ -49,6 +50,15 @@ Now you just need xtend.lib and start coding.
     dependencies {
       //or testCompile if you only want to use Xtend for some tests
       compile 'org.eclipse.xtend:org.eclipse.xtend.lib:2.5.2'
+    }
+    
+You can change compiler options through the Xtend DSL object
+
+    xtend {
+      useDaemon = true
+      xtendAsPrimaryDebugSource = true
+      hideSyntheticVariables = false
+      encoding = "UTF-16"
     }
 
 Limitations
