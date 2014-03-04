@@ -30,32 +30,56 @@ class XtendEnhance extends DefaultTask {
 
 	@Input
 	boolean xtendAsPrimaryDebugSource;
+	
+	@Input
+	boolean useDaemon
 
 	@TaskAction
 	def enhance() {
-		if (!classesFolder.exists()) return
+		if (!classesFolder.exists()) return;
 		for (folder in getSourceFolders().files) {
 			if (!folder.isDirectory()) throw new GradleException("${folder} is not a directory")
 		}
 
-		def	command = [
-			"java",
-			"-cp",
-			getXtendClasspath().asPath,
-			"org.xtend.enhance.batch.Main",
+		def enhanceArguments = [
 			"-c",
 			getClassesFolder().absolutePath,
 			"-o",
 			getTargetFolder().absolutePath
 		]
+
 		if (hideSyntheticVariables) {
-			command += ["-hideSynthetic"]
+			enhanceArguments += ["-hideSynthetic"]
 		}
 		if (xtendAsPrimaryDebugSource) {
-			command += ["-xtendAsPrimary"]
+			enhanceArguments += ["-xtendAsPrimary"]
 		}
-		command += [
+		enhanceArguments += [
 			getSourceFolders().files.join(" ")
+		]
+		
+		if (getUseDaemon()) {
+			enhanceWithDaemon(enhanceArguments)
+		} else {
+			enhanceWithoutDaemon(enhanceArguments)
+		}
+	}
+
+	def enhanceWithDaemon(List<String> arguments) {
+		def compiler = new XtendCompilerClient()
+		compiler.requireServer(getXtendClasspath().asPath)
+		if (!compiler.enhance(arguments)) {
+			throw new GradleException("Installing debug information failed");
+		}
+	}
+
+	def enhanceWithoutDaemon(List<String> arguments) {
+		def	command = [
+			"java",
+			"-cp",
+			getXtendClasspath().asPath,
+			"org.xtend.enhance.batch.Main",
+			*arguments
 		]
 
 		def pb = new ProcessBuilder(command)

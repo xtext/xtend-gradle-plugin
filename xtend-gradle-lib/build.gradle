@@ -1,5 +1,6 @@
 dependencies {
-  compile 'org.eclipse.xtend:org.eclipse.xtend.core:2.5.2'
+  compile 'org.eclipse.xtend:org.eclipse.xtend.core:2.5.+'
+  compile 'com.martiansoftware:nailgun-server:0.9.1'
 }
 
 uploadArchives.repositories.mavenDeployer.pom.project {

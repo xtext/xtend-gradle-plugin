@@ -4,7 +4,6 @@ import java.io.File;
 import java.util.Arrays;
 import java.util.Iterator;
 
-import org.apache.log4j.BasicConfigurator;
 import org.eclipse.xtend.core.XtendInjectorSingleton;
 
 import com.google.inject.Injector;
@@ -12,7 +11,6 @@ import com.google.inject.Injector;
 public class Main {
 
 	public static void main(String[] args) {
-		BasicConfigurator.configure();
 		Injector injector = XtendInjectorSingleton.INJECTOR;
 		XtendDebugInfoInstaller installer = injector.getInstance(XtendDebugInfoInstaller.class);
 		if ((args == null) || (args.length == 0)) {

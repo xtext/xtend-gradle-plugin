@@ -27,16 +27,14 @@ class XtendCompile extends DefaultTask {
 	@InputFiles
 	FileCollection xtendClasspath
 
-	//TODO make tempdir configurable	
-	//TODO allow using a daemon instead of forking a new process each time
+	@Input
+	Boolean useDaemon
+
+	//TODO make tempdir configurable
 	@TaskAction
 	def compile() {
 		def sourcePath = getSrcDirs().srcDirTrees.collect{it.dir.absolutePath}.join(File.pathSeparator)
-		def	command = [
-			"java",
-			"-cp",
-			getXtendClasspath().asPath,
-			"org.eclipse.xtend.core.compiler.batch.Main",
+		def compilerArguments = [
 			"-cp",
 			getClasspath().asPath,
 			"-d",
@@ -47,6 +45,30 @@ class XtendCompile extends DefaultTask {
 			new File(project.getBuildDir(), "xtend-temp").absolutePath,
 			sourcePath
 		]
+		if (getUseDaemon()) {
+			compileWithDaemon(compilerArguments)
+		} else {
+			compileWithoutDaemon(compilerArguments)
+		}
+	}
+
+	def compileWithDaemon(List<String> arguments) {
+		def compiler = new XtendCompilerClient()
+		compiler.requireServer(getXtendClasspath().asPath)
+		if (!compiler.compile(arguments)) {
+			throw new GradleException("Xtend Compilation failed");
+		}
+	}
+
+	def compileWithoutDaemon(List<String> arguments) {
+		def	command = [
+			"java",
+			"-cp",
+			getXtendClasspath().asPath,
+			"org.eclipse.xtend.core.compiler.batch.Main",
+			*arguments
+		]
+
 		def pb = new ProcessBuilder(command)
 		pb.redirectErrorStream(true)
 		def process = pb.start()
@@ -60,4 +82,5 @@ class XtendCompile extends DefaultTask {
 			throw new GradleException("Xtend Compilation failed");
 		}
 	}
+
 }

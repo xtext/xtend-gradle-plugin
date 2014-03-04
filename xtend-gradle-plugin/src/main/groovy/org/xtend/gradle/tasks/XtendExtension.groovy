@@ -12,6 +12,7 @@ class XtendExtension {
 	String encoding = "UTF-8"
 	boolean hideSyntheticVariables = true
 	boolean xtendAsPrimaryDebugSource = false
+	boolean useDaemon = false
 
 	XtendExtension(Project project) {
 		this.project = project

@@ -64,6 +64,9 @@ class XtendAndroidPlugin implements Plugin<Project> {
 				xtendCompile.conventionMapping.encoding = {
 					project.extensions.xtend.encoding
 				}
+				xtendCompile.conventionMapping.useDaemon = {
+					project.extensions.xtend.useDaemon
+				}
 				xtendCompile.conventionMapping.targetDir = {
 					def sourceBase = Iterables.getLast(variant.getSourceSets()).getJavaDirectories().toList().first().getParent()
 					project.file("${sourceBase}/${project.extensions.xtend.sourceRelativeOutput}")
@@ -101,6 +104,9 @@ class XtendAndroidPlugin implements Plugin<Project> {
 				}
 				enhanceTask.conventionMapping.xtendAsPrimaryDebugSource = {
 					project.extensions.xtend.xtendAsPrimaryDebugSource
+				}
+				enhanceTask.conventionMapping.useDaemon = {
+					project.extensions.xtend.useDaemon
 				}
 				enhanceTask.dependsOn(variant.getJavaCompile())
 				variant.getAssemble().dependsOn(enhanceTask)

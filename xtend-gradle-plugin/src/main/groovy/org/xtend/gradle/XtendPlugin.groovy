@@ -52,6 +52,9 @@ class XtendPlugin implements Plugin<Project> {
 				it.conventionMapping.encoding = {
 					project.extensions.xtend.encoding
 				}
+				it.conventionMapping.useDaemon = {
+					project.extensions.xtend.useDaemon
+				}
 				it.conventionMapping.targetDir = {
 					project.file("src/${sourceSet.getName()}/${project.extensions.xtend.sourceRelativeOutput}")
 				}
@@ -76,6 +79,9 @@ class XtendPlugin implements Plugin<Project> {
 				}
 				it.conventionMapping.xtendAsPrimaryDebugSource = {
 					project.extensions.xtend.xtendAsPrimaryDebugSource
+				}
+				it.conventionMapping.useDaemon = {
+					project.extensions.xtend.useDaemon
 				}
 				it.conventionMapping.xtendClasspath = {
 					project.extensions.xtend.inferXtendClasspath(sourceSet.compileClasspath)

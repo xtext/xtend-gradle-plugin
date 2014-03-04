@@ -3,4 +3,5 @@
 .settings/
 .gradle/
 build/
-/bin
+
+bin/
