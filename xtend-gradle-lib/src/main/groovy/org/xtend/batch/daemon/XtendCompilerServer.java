@@ -32,7 +32,7 @@ public class XtendCompilerServer {
 				server.shutdown(true);
 			}
 		};
-		Timer timer = new Timer();
+		Timer timer = new Timer("Xtend compiler shutdown timer", true);
 		timer.schedule(shutDown, TimeUnit.MINUTES.toMillis(10));
 		Thread thread = new Thread(server);
 		thread.setName("Xtend compiler server");
