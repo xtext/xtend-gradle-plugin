@@ -39,6 +39,10 @@ public class NailgunClient {
 		this.address = address;
 		this.port = port;
 	}
+	
+	public Charset getEncoding() {
+		return encoding;
+	}
 
 	public void setEncoding(Charset encoding) {
 		this.encoding = encoding;
@@ -46,6 +50,10 @@ public class NailgunClient {
 
 	public boolean serverAvailable() {
 		return run("ng-version") == 0;
+	}
+	
+	public void stopServer() {
+		run("ng-stop");
 	}
 
 	public int run(String command) {

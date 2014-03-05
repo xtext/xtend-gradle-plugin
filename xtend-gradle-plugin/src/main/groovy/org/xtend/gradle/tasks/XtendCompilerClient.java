@@ -1,6 +1,8 @@
 package org.xtend.gradle.tasks;
 
+import java.io.ByteArrayOutputStream;
 import java.io.File;
+import java.util.ArrayList;
 import java.util.List;
 
 import com.google.common.base.Throwables;
@@ -26,13 +28,19 @@ public class XtendCompilerClient {
 	}
 
 	public void requireServer(String classpath) {
-		if (!isServerRunning()) {
+		if (!delegate.serverAvailable()) {
+			startServer(classpath);
+		}
+		if (!getServerClasspath().equals(classpath)) {
+			delegate.stopServer();
 			startServer(classpath);
 		}
 	}
 
-	private boolean isServerRunning() {
-		return delegate.serverAvailable();
+	private String getServerClasspath() {
+		ByteArrayOutputStream out = new ByteArrayOutputStream();
+		delegate.send("xtendClasspath", new ArrayList<String>(), new File(""), out, out);
+		return new String(out.toByteArray(), delegate.getEncoding()).trim();
 	}
 
 	private void startServer(String classpath) {
@@ -47,7 +55,7 @@ public class XtendCompilerClient {
 			Throwables.propagate(e);
 		}
 		int count = 0;
-		while (!isServerRunning() && count < 50) {
+		while (!delegate.serverAvailable() && count < 50) {
 			try {
 				Thread.sleep(100);
 				count++;

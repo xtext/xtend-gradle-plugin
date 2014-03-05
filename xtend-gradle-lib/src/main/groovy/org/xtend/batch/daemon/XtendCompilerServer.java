@@ -23,6 +23,8 @@ public class XtendCompilerServer {
 				new Alias("compile", "Compile Xtend files", org.xtend.compiler.batch.Main.class));
 		server.getAliasManager().addAlias(
 				new Alias("enhance", "Enhance Java classes with Xtend debug info", org.xtend.enhance.batch.Main.class));
+		server.getAliasManager().addAlias(
+				new Alias("xtendClasspath", "Returns the classpath argument that was used for creating this server", ClassPathPrinter.class));
 	}
 
 	public void start() {
