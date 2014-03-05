@@ -18,6 +18,9 @@ import com.google.common.base.Charsets;
 import com.google.common.base.Throwables;
 import com.martiansoftware.nailgun.NGConstants;
 
+/**
+ * A java implementation of the Nailgun protocol
+ */
 public class NailgunClient {
 
 	public static NailgunClient onLocalHost(int port) {

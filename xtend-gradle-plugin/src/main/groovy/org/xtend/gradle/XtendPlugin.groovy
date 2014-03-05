@@ -34,9 +34,10 @@ class XtendPlugin implements Plugin<Project> {
 	}
 
 	void apply(Project project) {
-		project.extensions.create("xtend", XtendExtension, project)
-
+		project.plugins.apply(XtendBasePlugin)
 		project.plugins.apply(JavaPlugin)
+		project.plugins.apply(EclipsePlugin)
+		
 		JavaPluginConvention java = project.convention.getPlugin(JavaPluginConvention)
 		java.sourceSets.all{SourceSet sourceSet ->
 			def compileTaskName = sourceSet.getCompileTaskName("xtend")
@@ -49,15 +50,6 @@ class XtendPlugin implements Plugin<Project> {
 						}
 				it.srcDirs.source(sourceSet.getJava())
 				it.classpath = sourceSet.compileClasspath
-				it.conventionMapping.encoding = {
-					project.extensions.xtend.encoding
-				}
-				it.conventionMapping.useDaemon = {
-					project.extensions.xtend.useDaemon
-				}
-				it.conventionMapping.daemonPort = {
-					project.extensions.xtend.daemonPort
-				}
 				it.conventionMapping.targetDir = {
 					project.file("src/${sourceSet.getName()}/${project.extensions.xtend.sourceRelativeOutput}")
 				}
@@ -77,18 +69,6 @@ class XtendPlugin implements Plugin<Project> {
 			XtendEnhance enhanceTask = project.task(type: XtendEnhance, enhanceTaskName) {XtendEnhance it ->
 				it.targetFolder = classesDir
 				it.classesFolder = unenhancedClassesDir
-				it.conventionMapping.hideSyntheticVariables = {
-					project.extensions.xtend.hideSyntheticVariables
-				}
-				it.conventionMapping.xtendAsPrimaryDebugSource = {
-					project.extensions.xtend.xtendAsPrimaryDebugSource
-				}
-				it.conventionMapping.useDaemon = {
-					project.extensions.xtend.useDaemon
-				}
-				it.conventionMapping.daemonPort = {
-					project.extensions.xtend.daemonPort
-				}
 				it.conventionMapping.xtendClasspath = {
 					project.extensions.xtend.inferXtendClasspath(sourceSet.compileClasspath)
 				}
@@ -100,21 +80,5 @@ class XtendPlugin implements Plugin<Project> {
 			enhanceTask.dependsOn(javaCompile)
 			project.tasks[sourceSet.classesTaskName].dependsOn(enhanceTask)
 		}
-
-		project.plugins.apply(EclipsePlugin)
-		def EclipseModel eclipse = project.extensions.getByType(EclipseModel)
-		eclipse.getProject().buildCommand("org.eclipse.xtext.ui.shared.xtextBuilder")
-		eclipse.getProject().natures("org.eclipse.xtext.ui.shared.xtextNature")
-		def settingsTask = project.task(type: XtendEclipseSettings, "xtendEclipseSettings")
-		settingsTask.conventionMapping.sourceRelativeOutput = {
-			project.extensions.xtend.sourceRelativeOutput
-		}
-		settingsTask.conventionMapping.hideSyntheticVariables = {
-			project.extensions.xtend.hideSyntheticVariables
-		}
-		settingsTask.conventionMapping.xtendAsPrimaryDebugSource = {
-			project.extensions.xtend.xtendAsPrimaryDebugSource
-		}
-		project.tasks[EclipsePlugin.ECLIPSE_TASK_NAME].dependsOn(settingsTask)
 	}
 }

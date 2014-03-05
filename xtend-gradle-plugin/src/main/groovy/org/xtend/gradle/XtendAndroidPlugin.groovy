@@ -36,7 +36,7 @@ class XtendAndroidPlugin implements Plugin<Project> {
 
 	@Override
 	public void apply(Project project) {
-		project.extensions.create("xtend", XtendExtension, project)
+		project.plugins.apply(XtendBasePlugin)
 		project.extensions.xtend.xtendAsPrimaryDebugSource = true
 		project.afterEvaluate{
 			def variants
@@ -61,15 +61,6 @@ class XtendAndroidPlugin implements Plugin<Project> {
 				XtendCompile xtendCompile = project.task(type: XtendCompile, compileTaskName)
 				xtendCompile.srcDirs = xtendSources
 				xtendCompile.classpath = variant.getJavaCompile().getClasspath()
-				xtendCompile.conventionMapping.encoding = {
-					project.extensions.xtend.encoding
-				}
-				xtendCompile.conventionMapping.useDaemon = {
-					project.extensions.xtend.useDaemon
-				}
-				xtendCompile.conventionMapping.daemonPort = {
-					project.extensions.xtend.daemonPort
-				}
 				xtendCompile.conventionMapping.targetDir = {
 					def sourceBase = Iterables.getLast(variant.getSourceSets()).getJavaDirectories().toList().first().getParent()
 					project.file("${sourceBase}/${project.extensions.xtend.sourceRelativeOutput}")
@@ -101,18 +92,6 @@ class XtendAndroidPlugin implements Plugin<Project> {
 				enhanceTask.targetFolder = classesDir
 				enhanceTask.conventionMapping.xtendClasspath = {
 					project.extensions.xtend.inferXtendClasspath(variant.getJavaCompile().getClasspath())
-				}
-				enhanceTask.conventionMapping.hideSyntheticVariables = {
-					project.extensions.xtend.hideSyntheticVariables
-				}
-				enhanceTask.conventionMapping.xtendAsPrimaryDebugSource = {
-					project.extensions.xtend.xtendAsPrimaryDebugSource
-				}
-				enhanceTask.conventionMapping.useDaemon = {
-					project.extensions.xtend.useDaemon
-				}
-				enhanceTask.conventionMapping.daemonPort = {
-					project.extensions.xtend.daemonPort
 				}
 				enhanceTask.dependsOn(variant.getJavaCompile())
 				variant.getAssemble().dependsOn(enhanceTask)
