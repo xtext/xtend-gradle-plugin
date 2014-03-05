@@ -65,9 +65,6 @@ class XtendAndroidPlugin implements Plugin<Project> {
 					def sourceBase = Iterables.getLast(variant.getSourceSets()).getJavaDirectories().toList().first().getParent()
 					project.file("${sourceBase}/${project.extensions.xtend.sourceRelativeOutput}")
 				}
-				xtendCompile.conventionMapping.xtendClasspath = {
-					project.extensions.xtend.inferXtendClasspath(variant.getJavaCompile().getClasspath())
-				}
 				xtendCompile.doFirst{
 					com.android.build.gradle.BasePlugin androidPlugin
 					try {

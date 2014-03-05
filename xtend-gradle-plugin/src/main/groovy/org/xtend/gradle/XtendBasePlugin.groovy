@@ -47,6 +47,7 @@ class XtendBasePlugin implements Plugin<Project> {
 		convention.encoding = {xtend.encoding}
 		convention.useDaemon = {xtend.useDaemon}
 		convention.daemonPort = {xtend.daemonPort}
+		convention.xtendClasspath = {xtend.inferXtendClasspath(compileTask.getClasspath())}
 	}
 
 	private def configureEnhanceTaskConventions(XtendEnhance enhanceTask) {
