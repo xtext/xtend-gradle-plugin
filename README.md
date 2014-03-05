@@ -25,7 +25,7 @@ Add the plugins to your build classpath
         mavenCentral()
       }
       dependencies {
-        classpath 'org.xtend:xtend-gradle-plugin:0.0.3'
+        classpath 'org.xtend:xtend-gradle-plugin:0.0.4'
       }
     }
 
