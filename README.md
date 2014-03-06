@@ -20,46 +20,56 @@ Usage
 
 Add the plugins to your build classpath
 
-    buildscript {
-      repositories {
-        mavenCentral()
-      }
-      dependencies {
-        classpath 'org.xtend:xtend-gradle-plugin:0.0.4'
-      }
-    }
+```groovy
+buildscript {
+  repositories {
+    mavenCentral()
+  }
+  dependencies {
+    classpath 'org.xtend:xtend-gradle-plugin:0.0.4'
+  }
+}
+```
 
 For normal Java projects add 
 
-    apply plugin: 'xtend'
+```groovy
+apply plugin: 'xtend'
+```
 
 This will automatically apply the 'java' and 'eclipse' plugins, too.
   
 If you are using the new Android build system, add
 
-    apply plugin: 'xtend-android'
+```groovy
+apply plugin: 'xtend-android'
+```
 
 This will not apply anything else, because there are different android plugins for apps and libraries. Just choose yourself. Also this will not generate Eclipse metadata, since the new Android build system is currently only supported by Android Studio.
     
 Now you just need xtend.lib and start coding.
 
-    repositories {
-    	mavenCentral()
-    }
-    
-    dependencies {
-      //or testCompile if you only want to use Xtend for some tests
-      compile 'org.eclipse.xtend:org.eclipse.xtend.lib:2.5.2'
-    }
+```groovy
+repositories {
+	mavenCentral()
+}
+
+dependencies {
+  //or testCompile if you only want to use Xtend for some tests
+  compile 'org.eclipse.xtend:org.eclipse.xtend.lib:2.5.2'
+}
+```
     
 You can change compiler options through the Xtend DSL object
 
-    xtend {
-      useDaemon = true
-      xtendAsPrimaryDebugSource = true
-      hideSyntheticVariables = false
-      encoding = "UTF-16"
-    }
+```groovy
+xtend {
+  useDaemon = true
+  xtendAsPrimaryDebugSource = true
+  hideSyntheticVariables = false
+  encoding = "UTF-16"
+}
+```
 
 Limitations
 -----------
