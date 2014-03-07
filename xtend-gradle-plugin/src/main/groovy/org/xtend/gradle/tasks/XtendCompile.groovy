@@ -69,7 +69,7 @@ class XtendCompile extends DefaultTask {
 			"java",
 			"-cp",
 			getXtendClasspath().asPath,
-			"org.eclipse.xtend.core.compiler.batch.Main",
+			"org.xtend.compiler.batch.Main",
 			*arguments
 		]
 
