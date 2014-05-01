@@ -51,12 +51,14 @@ class XtendPlugin implements Plugin<Project> {
 				it.srcDirs.source(sourceSet.getJava())
 				it.classpath = sourceSet.compileClasspath
 				it.conventionMapping.targetDir = {
-					project.file("src/${sourceSet.getName()}/${project.extensions.xtend.sourceRelativeOutput}")
+					project.file("${new ArrayList(sourceSet.java.srcDirs).last().parent}/${project.extensions.xtend.sourceRelativeOutput}")
 				}
 				it.setDescription("Compiles the ${sourceSet.getName()} Xtend sources")
 			}
 			def JavaCompile javaCompile = project.tasks[sourceSet.compileJavaTaskName]
-			sourceSet.getJava().srcDir{compileTask.getTargetDir()}
+      project.afterEvaluate {
+        sourceSet.getJava().srcDir(compileTask.getTargetDir())
+      }
 			javaCompile.dependsOn(compileTask)
 			project.tasks["clean"].dependsOn("clean" + compileTaskName.capitalize())
 

@@ -27,10 +27,10 @@ class XtendExtension {
 				if (matcher.matches()) {
 					def version = matcher.group(2)
 					List<Dependency> dependencies = new ArrayList();
-					dependencies.add(project.getDependencies().create("org.eclipse.xtend:org.eclipse.xtend.core:${version}"));
+					dependencies.add(project.getDependencies().create("org.eclipse.xtend:org.eclipse.xtend.core:${version}") { force = true });
 					if (version < "2.6.0") {
-						dependencies.add(project.getDependencies().create("org.eclipse.xtend:org.eclipse.xtend.lib:${version}"));
-						dependencies.add(project.getDependencies().create("org.xtend:xtend-gradle-lib:0.0.5"))
+						dependencies.add(project.getDependencies().create("org.eclipse.xtend:org.eclipse.xtend.lib:${version}") { force = true });
+						dependencies.add(project.getDependencies().create("org.xtend:xtend-gradle-lib:0.0.5") { force = true })
 					}
 					return project.getConfigurations().detachedConfiguration(dependencies as Dependency[]);
 				}
