@@ -26,7 +26,7 @@ buildscript {
     mavenCentral()
   }
   dependencies {
-    classpath 'org.xtend:xtend-gradle-plugin:0.0.4'
+    classpath 'org.xtend:xtend-gradle-plugin:0.0.5'
   }
 }
 ```
@@ -56,7 +56,7 @@ repositories {
 
 dependencies {
   //or testCompile if you only want to use Xtend for some tests
-  compile 'org.eclipse.xtend:org.eclipse.xtend.lib:2.5.2'
+  compile 'org.eclipse.xtend:org.eclipse.xtend.lib:2.5.4'
 }
 ```
     
@@ -74,4 +74,4 @@ xtend {
 Limitations
 -----------
 
-This is a very early version which only works with the 2.5.x versions of Xtend. Also, the behaviour and API are all subject to change. Please file issues here if anything doesn't work as you would expect.
+This is a very early version which only works with the [2.5.4, 2.6.0) versions of Xtend. Also, the behaviour and API are all subject to change. Please file issues here if anything doesn't work as you would expect.
