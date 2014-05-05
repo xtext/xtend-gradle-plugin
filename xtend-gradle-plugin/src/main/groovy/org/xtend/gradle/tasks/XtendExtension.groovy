@@ -33,7 +33,9 @@ class XtendExtension {
           });
 					if (version < "2.6.0") {
 						dependencies.add(project.getDependencies().create("org.eclipse.xtend:org.eclipse.xtend.lib:${version}"));
-						dependencies.add(project.getDependencies().create("org.xtend:xtend-gradle-lib:0.0.7"))
+						dependencies.add(project.getDependencies().create("org.xtend:xtend-gradle-lib:0.0.7") {
+              exclude group: 'asm'
+            })
 					}
 					return project.getConfigurations().detachedConfiguration(dependencies as Dependency[]);
 				}

@@ -8,3 +8,5 @@ uploadArchives.repositories.mavenDeployer.pom.project {
   name 'Xtend Gradle Plugin'
   description 'A Gradle Plugin for building Xtend projects'
 }
+
+project.test.dependsOn project(":xtend-gradle-lib").install
