@@ -31,7 +31,7 @@ class XtendExtension {
             force = true
             exclude group: 'asm'
           });
-          dependencies.add(project.getDependencies().create("org.xtend:xtend-gradle-lib:0.0.8") {
+          dependencies.add(project.getDependencies().create("org.xtend:xtend-gradle-lib:0.0.9") {
               exclude group: 'asm'
           })
           dependencies.add(project.getDependencies().create("org.eclipse.xtend:org.eclipse.xtend.lib:${version}"));
