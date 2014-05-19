@@ -14,3 +14,7 @@ subprojects {
     compile localGroovy()
   }
 }
+
+task createWrapper(type: Wrapper) {
+  gradleVersion = '1.12'
+}
