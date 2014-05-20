@@ -1,6 +1,6 @@
 dependencies {
   compile gradleApi()
-  compile 'com.android.tools.build:gradle:0.8.+'
+  compile 'com.android.tools.build:gradle:0.9+'
   compile 'com.martiansoftware:nailgun-server:0.9.1'
 }
 
