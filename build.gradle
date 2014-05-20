@@ -4,7 +4,7 @@ subprojects {
   apply from: '../mavenRelease.gradle'
  
   group = "org.xtend"
-  version = "0.0.9"
+  version = "0.0.10-SNAPSHOT"
   
   repositories {
     mavenCentral()
