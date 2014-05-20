@@ -61,6 +61,11 @@ class XtendEnhance extends DefaultTask {
 			getSourceFolders().files.join(" ")
 		]
 		
+		project.copy {
+		  from getClassesFolder().absolutePath
+		  into getTargetFolder().absolutePath
+		}
+		
 		if (getUseDaemon()) {
 			enhanceWithDaemon(enhanceArguments)
 		} else {
