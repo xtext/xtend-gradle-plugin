@@ -19,22 +19,27 @@ class XtendExtension {
 		this.project = project
 	}
 
+  private String getPluginVersion() {
+    this.class.package.implementationVersion
+  }
+
 	def FileCollection inferXtendClasspath(FileCollection classpath) {
+		def xtendPluginVersion = getPluginVersion()
 		def pattern = Pattern.compile("org.eclipse.xtend.(core|lib)-(\\d.*?).jar")
 		project.files {
 			for (File file in classpath) {
 				def matcher = pattern.matcher(file.getName())
 				if (matcher.matches()) {
-					def version = matcher.group(2)
+					def xtendVersion = matcher.group(2)
 					List<Dependency> dependencies = new ArrayList();
-					dependencies.add(project.getDependencies().create("org.eclipse.xtend:org.eclipse.xtend.core:${version}") { 
+					dependencies.add(project.getDependencies().create("org.eclipse.xtend:org.eclipse.xtend.core:${xtendVersion}") { 
             force = true
             exclude group: 'asm'
           });
-          dependencies.add(project.getDependencies().create("org.xtend:xtend-gradle-lib:0.0.9") {
+          dependencies.add(project.getDependencies().create("org.xtend:xtend-gradle-lib:${xtendPluginVersion}") {
               exclude group: 'asm'
           })
-          dependencies.add(project.getDependencies().create("org.eclipse.xtend:org.eclipse.xtend.lib:${version}"));
+          dependencies.add(project.getDependencies().create("org.eclipse.xtend:org.eclipse.xtend.lib:${xtendVersion}"));
 					return project.getConfigurations().detachedConfiguration(dependencies as Dependency[]);
 				}
 			}

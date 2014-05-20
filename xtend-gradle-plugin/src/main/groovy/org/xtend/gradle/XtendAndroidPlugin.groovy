@@ -72,7 +72,7 @@ class XtendAndroidPlugin implements Plugin<Project> {
 					} catch(UnknownPluginException e) {
 						androidPlugin = project.plugins.getPlugin(LibraryPlugin)
 					}
-					xtendCompile.classpath = xtendCompile.getClasspath() + project.files(androidPlugin.getRuntimeJarList() as String[])
+					xtendCompile.classpath = xtendCompile.getClasspath() + project.files(androidPlugin.getBootClasspath() as String[])
 				}
 				xtendCompile.setDescription("Compiles the ${variant.getName()} Xtend sources")
 				variant.registerJavaGeneratingTask(xtendCompile, xtendCompile.getTargetDir())

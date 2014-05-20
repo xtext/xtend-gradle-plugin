@@ -4,6 +4,12 @@ dependencies {
   compile 'com.martiansoftware:nailgun-server:0.9.1'
 }
 
+jar {
+  manifest {
+    attributes("Implementation-Version": version)
+  }
+} 
+
 uploadArchives.repositories.mavenDeployer.pom.project {
   name 'Xtend Gradle Plugin'
   description 'A Gradle Plugin for building Xtend projects'
