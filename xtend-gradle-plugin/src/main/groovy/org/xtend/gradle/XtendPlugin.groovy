@@ -51,7 +51,7 @@ class XtendPlugin implements Plugin<Project> {
 				it.srcDirs.source(sourceSet.getJava())
 				it.classpath = sourceSet.compileClasspath
 				it.conventionMapping.targetDir = {
-					project.file("${new ArrayList(sourceSet.java.srcDirs).last().parent}/${project.extensions.xtend.sourceRelativeOutput}")
+					project.file("${new ArrayList(sourceSet.java.srcDirs).grep{dir -> !dir.path.startsWith(project.buildDir.path)}.last().parent}/${project.extensions.xtend.sourceRelativeOutput}")
 				}
 				it.setDescription("Compiles the ${sourceSet.getName()} Xtend sources")
 			}
