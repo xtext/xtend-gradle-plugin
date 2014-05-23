@@ -26,7 +26,7 @@ buildscript {
     mavenCentral()
   }
   dependencies {
-    classpath 'org.xtend:xtend-gradle-plugin:0.0.10'
+    classpath 'org.xtend:xtend-gradle-plugin:0.1.0'
   }
 }
 ```
@@ -51,11 +51,10 @@ Now you just need xtend.lib and start coding.
 
 ```groovy
 repositories {
-	mavenCentral()
+  mavenCentral()
 }
 
 dependencies {
-  //or testCompile if you only want to use Xtend for some tests
   compile 'org.eclipse.xtend:org.eclipse.xtend.lib:2.6.0'
 }
 ```
@@ -68,6 +67,15 @@ xtend {
   xtendAsPrimaryDebugSource = true
   hideSyntheticVariables = false
   encoding = "UTF-16"
+}
+```
+
+And the target folder per source set. The default is ```build/xtend-gen/${source set name}```
+
+```groovy
+sourceSets {
+  main.xtendOutputDir = 'xtend-gen'
+  test.xtendOutputDir = 'test/xtend-gen'
 }
 ```
 
