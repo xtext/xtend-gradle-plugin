@@ -82,4 +82,6 @@ sourceSets {
 Limitations
 -----------
 
-This is a very early version which only works with the [2.5.4, 2.6.0] versions of Xtend. Also, the behaviour and API are all subject to change. Please file issues here if anything doesn't work as you would expect.
+This plugin supports Xtend 2.5.4 and higher. For the android plugin, version 0.10 or higher is supported.
+
+Also, the behaviour and API are still subject to change. Please file issues here if anything doesn't work as you would expect.
