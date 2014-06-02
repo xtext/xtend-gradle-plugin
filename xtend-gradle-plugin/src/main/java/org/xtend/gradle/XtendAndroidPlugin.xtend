@@ -47,12 +47,14 @@ class XtendAndroidPlugin implements Plugin<Project> {
 				val xtendSources = new DefaultXtendSourceSet(fileResolver)
 				val sourceDirs = newArrayList
 				val javaDirs = variant.sourceSets.map[javaDirectories].flatten.filter[directory]
-				sourceDirs.addAll(javaDirs)
-				sourceDirs.addAll(variant.aidlCompile.sourceOutputDir)
-				sourceDirs.addAll(variant.generateBuildConfig.sourceOutputDir)
-				sourceDirs.addAll(variant.renderscriptCompile.sourceOutputDir)
-				sourceDirs.addAll(variant.processResources.sourceOutputDir)
-				xtendSources.xtend.srcDirs(sourceDirs)
+				sourceDirs += javaDirs
+				sourceDirs += #[
+					variant.aidlCompile.sourceOutputDir,
+					variant.generateBuildConfig.sourceOutputDir,
+					variant.renderscriptCompile.sourceOutputDir,
+					variant.processResources.sourceOutputDir
+				]
+				xtendSources.xtend.srcDirs = sourceDirs
 				xtendSources.xtendOutputDir = '''build/xtend-gen/«variant.name»'''
 				val xtendCompile = project.tasks.create(compileTaskName, XtendCompile)
 				xtendCompile.srcDirs = xtendSources.xtend

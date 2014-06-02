@@ -1,11 +1,9 @@
-import org.xtend.gradle.tasks.*
-
 buildscript {
 	repositories {
 		mavenCentral()
 	}
 	dependencies {
-		classpath 'org.xtend:xtend-gradle-plugin:0.0.10'
+		classpath 'org.xtend:xtend-gradle-plugin:0.1.0'
 	}
 }
 
@@ -19,32 +17,12 @@ subprojects {
   repositories {
     mavenCentral()
   }
-	
-	configurations {
-		xtendTooling
-	}
   
   dependencies {
     compile localGroovy()
 		compile 'org.eclipse.xtend:org.eclipse.xtend.lib:[2.5.4,)'
 		compile 'com.github.oehme.xtend:xtend-contrib:0.4.5'
-		xtendTooling ('org.xtend:xtend-gradle-lib:0.0.10') {
-			force = true
-		}
-		xtendTooling ('org.eclipse.xtend:org.eclipse.xtend.core:[2.5.4,)') {
-			force = true
-			exclude group:'asm'
-		}
-		xtendTooling 'org.eclipse.xtend:org.eclipse.xtend.lib:[2.5.4,)'
   }
-	
-	tasks.withType(XtendCompile).all {
-		xtendClasspath = configurations.xtendTooling
-	}
-	
-	tasks.withType(XtendEnhance).all {
-		xtendClasspath = configurations.xtendTooling
-	}
 }
 
 task createWrapper(type: Wrapper) {
