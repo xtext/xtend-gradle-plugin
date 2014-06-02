@@ -26,7 +26,7 @@ buildscript {
     mavenCentral()
   }
   dependencies {
-    classpath 'org.xtend:xtend-gradle-plugin:0.1.0'
+    classpath 'org.xtend:xtend-gradle-plugin:0.1.+'
   }
 }
 ```
@@ -55,7 +55,7 @@ repositories {
 }
 
 dependencies {
-  compile 'org.eclipse.xtend:org.eclipse.xtend.lib:2.6.0'
+  compile 'org.eclipse.xtend:org.eclipse.xtend.lib:2.6.+'
 }
 ```
     
