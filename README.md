@@ -63,6 +63,7 @@ You can change compiler options through the Xtend DSL object
 
 ```groovy
 xtend {
+  fork = true
   useDaemon = true
   xtendAsPrimaryDebugSource = true
   hideSyntheticVariables = false
