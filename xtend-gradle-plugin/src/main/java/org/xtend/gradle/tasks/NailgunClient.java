@@ -14,6 +14,9 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import com.google.common.base.Charsets;
 import com.google.common.base.Throwables;
 import com.martiansoftware.nailgun.NGConstants;
@@ -22,6 +25,7 @@ import com.martiansoftware.nailgun.NGConstants;
  * A java implementation of the Nailgun protocol
  */
 public class NailgunClient {
+	private static final Logger LOG = LoggerFactory.getLogger(NailgunClient.class);
 
 	public static NailgunClient onLocalHost(int port) {
 		try {
@@ -66,13 +70,23 @@ public class NailgunClient {
 	}
 
 	public int send(String command, List<String> args, File cwd, OutputStream out, OutputStream err) {
-		try (Socket socket = new Socket(address, port);
-				OutputStream socketOut = socket.getOutputStream();
-				DataInputStream socketIn = new DataInputStream(socket.getInputStream());) {
+		Socket socket = null;
+		try  {
+			socket = new Socket(address, port);
+			OutputStream socketOut = socket.getOutputStream();
+			DataInputStream socketIn = new DataInputStream(socket.getInputStream());
 			sendCommand(command, args, cwd, socketOut);
 			return receiveOutput(socketIn, out, err);
 		} catch (IOException e) {
 			throw Throwables.propagate(e);
+		} finally {
+			if (socket != null) {
+				try {
+					socket.close();
+				} catch (IOException e) {
+					LOG.error("Failed to close socket", e);
+				}
+			}
 		}
 	}
 

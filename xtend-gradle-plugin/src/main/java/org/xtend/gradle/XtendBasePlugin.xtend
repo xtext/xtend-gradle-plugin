@@ -32,6 +32,7 @@ class XtendBasePlugin implements Plugin<Project> {
 		compileTask.conventionMapping(
 			#{
 				"encoding" -> [|xtend.encoding],
+				"fork" -> [|xtend.fork],
 				"useDaemon" -> [|xtend.useDaemon],
 				"daemonPort" -> [|xtend.daemonPort],
 				"xtendClasspath" -> [|xtend.inferXtendClasspath(compileTask.getClasspath())]
@@ -44,6 +45,7 @@ class XtendBasePlugin implements Plugin<Project> {
 			#{
 				"hideSyntheticVariables" -> [|xtend.hideSyntheticVariables],
 				"xtendAsPrimaryDebugSource" -> [|xtend.xtendAsPrimaryDebugSource],
+				"fork" -> [|xtend.fork],
 				"useDaemon" -> [|xtend.useDaemon],
 				"daemonPort" -> [|xtend.daemonPort]
 			})

@@ -16,7 +16,6 @@ class XtendEclipseSettings extends DefaultTask {
 	@TaskAction
 	def writeSettings() {
 		val settings = new XtendEclipsePreferences(project)
-		settings.putInt("eclipse.preferences.version", 1)
 		settings.putBoolean("is_project_specific", true)
 		settings.putBoolean("hideLocalSyntheticVariables".key, getHideSyntheticVariables)
 		settings.putBoolean("installDslAsPrimarySource".key, getXtendAsPrimaryDebugSource)

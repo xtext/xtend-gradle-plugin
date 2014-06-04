@@ -23,6 +23,8 @@ subprojects {
 		compile 'org.eclipse.xtend:org.eclipse.xtend.lib:[2.5.4,)'
 		compile 'com.github.oehme.xtend:xtend-contrib:0.4.5'
   }
+	
+	sourceCompatibility = 1.5
 }
 
 task createWrapper(type: Wrapper) {

@@ -14,6 +14,7 @@ class XtendExtension {
 	@Property String encoding = "UTF-8"
 	@Property boolean hideSyntheticVariables = true
 	@Property boolean xtendAsPrimaryDebugSource = false
+	@Property boolean fork = false
 	@Property boolean useDaemon = false
 	@Property int daemonPort = 3032
 
@@ -39,7 +40,8 @@ class XtendExtension {
 					],
 					project.dependencies.externalModule('''org.xtend:xtend-gradle-lib:«pluginVersion»''') [
 						force = true
-					]
+					],
+					project.dependencies.externalModule('com.google.inject:guice:4.0-beta4')[]
 				]
 				return project.configurations.detachedConfiguration(dependencies)
 			}

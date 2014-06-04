@@ -2,6 +2,7 @@ package org.xtend.gradle.tasks;
 
 import de.oehme.xtend.contrib.Property
 import java.io.File
+import java.net.URLClassLoader
 import java.util.List
 import org.gradle.api.DefaultTask
 import org.gradle.api.GradleException
@@ -20,6 +21,7 @@ class XtendEnhance extends DefaultTask {
 	@OutputDirectory @Property File targetFolder
 	@Input @Property Boolean hideSyntheticVariables;
 	@Input @Property Boolean xtendAsPrimaryDebugSource;
+	@Input @Property Boolean fork
 	@Input @Property Boolean useDaemon
 	@Input @Property Integer daemonPort
 
@@ -51,11 +53,29 @@ class XtendEnhance extends DefaultTask {
 			from = getClassesFolder.absolutePath
 			into = getTargetFolder.absolutePath
 		]
-
-		if (getUseDaemon) {
-			enhanceWithDaemon(enhanceArguments)
+		if (getFork) {
+			if (getUseDaemon) {
+				enhanceWithDaemon(enhanceArguments)
+			} else {
+				enhanceWithoutDaemon(enhanceArguments)
+			}
 		} else {
-			enhanceWithoutDaemon(enhanceArguments)
+			enhanceNonForked(enhanceArguments)
+		}
+	}
+
+	def enhanceNonForked(List<String> arguments) {
+		System.setProperty("org.eclipse.emf.common.util.ReferenceClearingQueue", "false")
+		val contextClassLoader = Thread.currentThread.contextClassLoader
+		val classLoader = new URLClassLoader(getXtendClasspath.map[absoluteFile.toURI.toURL],
+			ClassLoader.systemClassLoader.parent)
+		try {
+			Thread.currentThread.contextClassLoader = classLoader
+			val main = classLoader.loadClass("org.xtend.enhance.batch.Main")
+			val mainMethod = main.getMethod("main", typeof(String[]))
+			mainMethod.invoke(null, #[arguments as String[]])
+		} finally {
+			Thread.currentThread.contextClassLoader = contextClassLoader
 		}
 	}
 

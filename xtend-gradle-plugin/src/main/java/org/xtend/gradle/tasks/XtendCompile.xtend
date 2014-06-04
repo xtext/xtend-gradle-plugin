@@ -2,6 +2,7 @@ package org.xtend.gradle.tasks
 
 import de.oehme.xtend.contrib.Property
 import java.io.File
+import java.net.URLClassLoader
 import java.util.List
 import org.gradle.api.DefaultTask
 import org.gradle.api.GradleException
@@ -20,6 +21,7 @@ class XtendCompile extends DefaultTask {
 	@OutputDirectory @Property File targetDir
 	@Input @Property String encoding
 	@InputFiles @Property FileCollection xtendClasspath
+	@Input @Property Boolean fork
 	@Input @Property Boolean useDaemon
 	@Input @Property Integer daemonPort
 
@@ -37,10 +39,29 @@ class XtendCompile extends DefaultTask {
 			new File(project.buildDir, "xtend-temp").absolutePath,
 			sourcePath
 		]
-		if (getUseDaemon) {
-			compileWithDaemon(compilerArguments)
+		if (getFork) {
+			if (getUseDaemon) {
+				compileWithDaemon(compilerArguments)
+			} else {
+				compileWithoutDaemon(compilerArguments)
+			}
 		} else {
-			compileWithoutDaemon(compilerArguments)
+			compileNonForked(compilerArguments)
+		}
+	}
+
+	def compileNonForked(List<String> arguments) {
+		System.setProperty("org.eclipse.emf.common.util.ReferenceClearingQueue", "false")
+		val contextClassLoader = Thread.currentThread.contextClassLoader
+		val classLoader = new URLClassLoader(getXtendClasspath.map[absoluteFile.toURI.toURL],
+			ClassLoader.systemClassLoader.parent)
+		try {
+			Thread.currentThread.contextClassLoader = classLoader
+			val main = classLoader.loadClass("org.xtend.compiler.batch.Main")
+			val mainMethod = main.getMethod("main", typeof(String[]))
+			mainMethod.invoke(null, #[arguments as String[]])
+		} finally {
+			Thread.currentThread.contextClassLoader = contextClassLoader
 		}
 	}
 
