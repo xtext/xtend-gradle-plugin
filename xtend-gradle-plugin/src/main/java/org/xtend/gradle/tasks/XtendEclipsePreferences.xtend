@@ -22,4 +22,8 @@ class XtendEclipsePreferences extends EclipsePreferences {
 		super.save
 	}
 	
+	override public load() throws BackingStoreException {
+		super.load
+	}
+	
 }
