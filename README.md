@@ -80,6 +80,35 @@ sourceSets {
 }
 ```
 
+Reducing the runtime footprint
+------------------------------
+
+If you develop for Android or some other restrictive platform where the number of classes or methods matter a lot, then there are several ways to reduce the runtime footprint of your Xtend projects.
+
+If your project does not define new active annotations, then you don't need the macro API from xtend.lib. You can use the smaller xbase.lib instead:
+
+```groovy
+dependencies {
+  compile 'org.eclipse.xtext:org.eclipse.xtext.xbase.lib:2.6.+'
+}
+```
+
+If your code and all of its dependencies work without Google Guava, then you can use xbase.lib.slim, which comes with an inlined and stripped down version of Guava.
+
+```groovy
+dependencies {
+  compile 'org.eclipse.xtext:org.eclipse.xtext.xbase.lib.slim:2.6.+'
+}
+```
+
+If you have dependencies which only contain active annotations, you can put them on the xtendCompileOnly classpath. Active annotations are expanded at compile time, so they are no longer needed at runtime.
+
+```groovy
+dependencies {
+  xtendCompileOnly 'com.github.oehme.xtend:xtend-contrib:0.4.5'
+}
+```
+
 Limitations
 -----------
 
