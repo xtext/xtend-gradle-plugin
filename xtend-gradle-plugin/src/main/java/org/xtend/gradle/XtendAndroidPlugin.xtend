@@ -87,7 +87,7 @@ class XtendAndroidPlugin implements Plugin<Project> {
 						]
 					})
 				enhanceTask.dependsOn(variant.javaCompile)
-				variant.assemble.dependsOn(enhanceTask)
+				variant.processJavaResources.dependsOn(enhanceTask)
 			]
 		]
 	}
