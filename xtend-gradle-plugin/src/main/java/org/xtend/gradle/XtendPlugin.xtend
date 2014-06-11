@@ -34,6 +34,8 @@ class XtendPlugin implements Plugin<Project> {
 
 		val java = project.convention.getPlugin(JavaPluginConvention)
 		java.sourceSets.all [ sourceSet |
+			sourceSet.compileClasspath = sourceSet.compileClasspath.plus(project.configurations.getAt("xtendCompileOnly"))
+			
 			val xtendSourceSet = new DefaultXtendSourceSet(fileResolver)
 			xtendSourceSet.xtend.source(sourceSet.java)
 			xtendSourceSet.xtendOutputDir= '''«project.buildDir»/xtend-gen/«sourceSet.name»'''

@@ -27,11 +27,11 @@ class XtendExtension {
 	}
 
 	def FileCollection inferXtendClasspath(FileCollection classpath) {
-		val pattern = Pattern.compile("org.eclipse.xtend.(core|lib)-(\\d.*?).jar")
+		val pattern = Pattern.compile("org.eclipse.(xtend|xtext.xbase).(core|lib|lib.slim)-(\\d.*?).jar")
 		for (file : classpath) {
 			val matcher = pattern.matcher(file.name)
 			if (matcher.matches) {
-				val xtendVersion = matcher.group(2)
+				val xtendVersion = matcher.group(3)
 				val dependencies = #[
 					project.dependencies.externalModule(
 						'''org.eclipse.xtend:org.eclipse.xtend.core:«xtendVersion»''') [

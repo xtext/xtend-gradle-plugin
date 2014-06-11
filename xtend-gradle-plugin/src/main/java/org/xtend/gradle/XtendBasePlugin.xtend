@@ -9,14 +9,19 @@ import org.xtend.gradle.tasks.XtendCompile
 import org.xtend.gradle.tasks.XtendEclipseSettings
 import org.xtend.gradle.tasks.XtendEnhance
 import org.xtend.gradle.tasks.XtendExtension
+
 import static extension org.xtend.gradle.GradleExtensions.*
+import org.gradle.api.artifacts.Configuration
+
 class XtendBasePlugin implements Plugin<Project> {
-	XtendExtension xtend
 	Project project
+	XtendExtension xtend
+	Configuration xtendCompileOnlyConfiguration
 
 	override apply(Project project) {
 		this.project = project
 		xtend = project.extensions.create("xtend", XtendExtension, project)
+		xtendCompileOnlyConfiguration = project.configurations.create("xtendCompileOnly")
 		project.plugins.<JavaBasePlugin>apply(JavaBasePlugin) //Xtend Bug 435429
 		configureTaskConventions
 		configureEclipsePluginIfPresent
@@ -65,6 +70,7 @@ class XtendBasePlugin implements Plugin<Project> {
 			if (eclipse !== null) {
 				eclipse.project.buildCommand("org.eclipse.xtext.ui.shared.xtextBuilder")
 				eclipse.project.natures("org.eclipse.xtext.ui.shared.xtextNature")
+				eclipse.classpath.plusConfigurations += xtendCompileOnlyConfiguration
 				val settingsTask = project.tasks.create("xtendEclipseSettings", XtendEclipseSettings)
 				project.tasks.getAt(EclipsePlugin.ECLIPSE_TASK_NAME).dependsOn(settingsTask)
 			}

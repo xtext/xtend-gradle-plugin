@@ -43,6 +43,7 @@ class XtendAndroidPlugin implements Plugin<Project> {
 					throw new GradleException('''Unknown packaging type «android.class.simpleName»''')
 				}
 			variants.all [ variant |
+				variant.javaCompile.classpath = variant.javaCompile.classpath.plus(project.configurations.getAt("xtendCompileOnly"))
 				val compileTaskName = '''compile«variant.name.toFirstUpper»Xtend'''
 				val xtendSources = new DefaultXtendSourceSet(fileResolver)
 				val sourceDirs = newArrayList
