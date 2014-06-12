@@ -11,6 +11,7 @@ import org.gradle.api.artifacts.dsl.DependencyHandler
 import org.gradle.api.file.CopySpec
 import org.gradle.api.internal.IConventionAware
 import org.gradle.process.JavaExecSpec
+import org.gradle.api.file.FileCollection
 
 class GradleExtensions {
 	static def conventionMapping(Task task, Map<String, ? extends Function0<?>> mappings) {
@@ -55,5 +56,13 @@ class GradleExtensions {
 				null
 			}
 		}
+	}
+	
+	static def + (FileCollection first, FileCollection second) {
+		first.plus(second)
+	}
+	
+	static def - (FileCollection first, FileCollection second) {
+		first.minus(second)
 	}
 }

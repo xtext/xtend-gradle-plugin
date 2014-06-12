@@ -43,7 +43,7 @@ class XtendAndroidPlugin implements Plugin<Project> {
 					throw new GradleException('''Unknown packaging type «android.class.simpleName»''')
 				}
 			variants.all [ variant |
-				variant.javaCompile.classpath = variant.javaCompile.classpath.plus(project.configurations.getAt("xtendCompileOnly"))
+				variant.javaCompile.classpath = variant.javaCompile.classpath + project.configurations.getAt("xtendCompileOnly")
 				val compileTaskName = '''compile«variant.name.toFirstUpper»Xtend'''
 				val xtendSources = new DefaultXtendSourceSet(fileResolver)
 				val sourceDirs = newArrayList
@@ -67,7 +67,7 @@ class XtendAndroidPlugin implements Plugin<Project> {
 					} catch (UnknownPluginException e) {
 						project.plugins.<LibraryPlugin>getPlugin(LibraryPlugin)
 					}
-					xtendCompile.classpath = xtendCompile.classpath.plus(project.files(androidPlugin.bootClasspath))
+					xtendCompile.classpath = xtendCompile.classpath + project.files(androidPlugin.bootClasspath)
 				]
 				xtendCompile.setDescription('''Compiles the «variant.name» Xtend sources''')
 				variant.registerJavaGeneratingTask(xtendCompile, xtendCompile.targetDir)
@@ -86,6 +86,9 @@ class XtendAndroidPlugin implements Plugin<Project> {
 							xtend.inferXtendClasspath(variant.javaCompile.classpath)
 						]
 					})
+				enhanceTask.doLast[
+					variant.javaCompile.destinationDir = classesDir
+				]
 				enhanceTask.dependsOn(variant.javaCompile)
 				variant.processJavaResources.dependsOn(enhanceTask)
 			]
