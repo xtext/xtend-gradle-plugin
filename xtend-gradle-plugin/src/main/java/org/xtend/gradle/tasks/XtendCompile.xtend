@@ -12,6 +12,7 @@ import org.gradle.api.tasks.Input
 import org.gradle.api.tasks.InputFiles
 import org.gradle.api.tasks.OutputDirectory
 import org.gradle.api.tasks.TaskAction
+import org.gradle.internal.classloader.FilteringClassLoader
 
 import static extension org.xtend.gradle.GradleExtensions.*
 
@@ -53,8 +54,7 @@ class XtendCompile extends DefaultTask {
 	def compileNonForked(List<String> arguments) {
 		System.setProperty("org.eclipse.emf.common.util.ReferenceClearingQueue", "false")
 		val contextClassLoader = Thread.currentThread.contextClassLoader
-		val classLoader = new URLClassLoader(getXtendClasspath.map[absoluteFile.toURI.toURL],
-			ClassLoader.systemClassLoader.parent)
+		val classLoader = new URLClassLoader(getXtendClasspathWithoutLog4j.map[absoluteFile.toURI.toURL], loggingBridgeClassLoader)
 		try {
 			Thread.currentThread.contextClassLoader = classLoader
 			val main = classLoader.loadClass("org.xtend.compiler.batch.Main")
@@ -63,6 +63,17 @@ class XtendCompile extends DefaultTask {
 		} finally {
 			Thread.currentThread.contextClassLoader = contextClassLoader
 		}
+	}
+
+	def getXtendClasspathWithoutLog4j() {
+		getXtendClasspath.filter[!name.contains("log4j")]
+	}
+
+	def loggingBridgeClassLoader() {
+		new FilteringClassLoader(class.classLoader) => [
+			allowPackage("org.slf4j")
+			allowPackage("org.apache.log4j")
+		]
 	}
 
 	def compileWithDaemon(List<String> arguments) {

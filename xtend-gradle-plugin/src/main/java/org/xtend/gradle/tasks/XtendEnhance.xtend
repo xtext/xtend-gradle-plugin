@@ -11,12 +11,13 @@ import org.gradle.api.tasks.Input
 import org.gradle.api.tasks.InputFiles
 import org.gradle.api.tasks.OutputDirectory
 import org.gradle.api.tasks.TaskAction
+import org.gradle.internal.classloader.FilteringClassLoader
 
 import static extension org.xtend.gradle.GradleExtensions.*
 
 class XtendEnhance extends DefaultTask {
-	@InputFiles @Property FileCollection xtendClasspath
 	@InputFiles @Property FileCollection sourceFolders;
+	@InputFiles @Property FileCollection xtendClasspath
 	@Input @Property File classesFolder;
 	@OutputDirectory @Property File targetFolder
 	@Input @Property Boolean hideSyntheticVariables;
@@ -67,8 +68,7 @@ class XtendEnhance extends DefaultTask {
 	def enhanceNonForked(List<String> arguments) {
 		System.setProperty("org.eclipse.emf.common.util.ReferenceClearingQueue", "false")
 		val contextClassLoader = Thread.currentThread.contextClassLoader
-		val classLoader = new URLClassLoader(getXtendClasspath.map[absoluteFile.toURI.toURL],
-			ClassLoader.systemClassLoader.parent)
+		val classLoader = new URLClassLoader(getXtendClasspathWithoutLog4j.map[absoluteFile.toURI.toURL], loggingBridgeClassLoader)
 		try {
 			Thread.currentThread.contextClassLoader = classLoader
 			val main = classLoader.loadClass("org.xtend.enhance.batch.Main")
@@ -77,6 +77,17 @@ class XtendEnhance extends DefaultTask {
 		} finally {
 			Thread.currentThread.contextClassLoader = contextClassLoader
 		}
+	}
+	
+	def getXtendClasspathWithoutLog4j() {
+		getXtendClasspath.filter[!name.contains("log4j")]
+	}
+
+	def loggingBridgeClassLoader() {
+		new FilteringClassLoader(class.classLoader) => [
+			allowPackage("org.slf4j")
+			allowPackage("org.apache.log4j")
+		]
 	}
 
 	def enhanceWithDaemon(List<String> arguments) {
