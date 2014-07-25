@@ -15,9 +15,8 @@ Features
 - Supports both normal Java projects and the new Android build system
 - Hooks into 'gradle eclipse', so the Xtend compiler is configured for your project when you import it into Eclipse
 
-Usage
+Getting Started
 ------
-
 Add the plugins to your build classpath
 
 ```groovy
@@ -47,7 +46,7 @@ apply plugin: 'xtend-android'
 
 This will not apply anything else, because there are different android plugins for apps and libraries. Just choose yourself. Also this will not generate Eclipse metadata, since the new Android build system is currently only supported by Android Studio.
     
-Now you just need xtend.lib and start coding.
+Now you just need xtend.lib.
 
 ```groovy
 repositories {
@@ -58,20 +57,30 @@ dependencies {
   compile 'org.eclipse.xtend:org.eclipse.xtend.lib:2.6.+'
 }
 ```
-    
-You can change compiler options through the Xtend DSL object
+
+And you are ready to go. Use ```gradle build``` to compile your code and ```gradle eclipse``` to generate Eclipse project metadata.
+
+Options
+--------
+
+You can change compiler options through the Xtend DSL object. All of them have good defaults.
 
 ```groovy
 xtend {
+  //Run the compiler in a fresh JVM. Default is false
   fork = true
-  useDaemon = true
+  //Useful when you do many incremental builds. Default is false, only used in conjuction with fork=true
+  useDaemon = true              
+  //Default is false for Java and true for Android
   xtendAsPrimaryDebugSource = true
+  //Default is true for Java and false for Android
   hideSyntheticVariables = false
+  //Default is UTF-8
   encoding = "UTF-16"
 }
 ```
 
-And the target folder per source set. The default is ```build/xtend-gen/${source set name}```
+You can also change the output folder for each source set. The default is ```build/xtend-gen/${source set name}```
 
 ```groovy
 sourceSets {
