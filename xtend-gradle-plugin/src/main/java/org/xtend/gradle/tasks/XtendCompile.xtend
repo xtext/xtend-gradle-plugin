@@ -58,8 +58,8 @@ class XtendCompile extends DefaultTask {
 		try {
 			Thread.currentThread.contextClassLoader = classLoader
 			val main = classLoader.loadClass("org.xtend.compiler.batch.Main")
-			val mainMethod = main.getMethod("main", typeof(String[]))
-			mainMethod.invoke(null, #[arguments as String[]])
+			val compileMethod = main.getMethod("compile", typeof(String[]))
+			compileMethod.invoke(null, #[arguments as String[]])
 		} finally {
 			Thread.currentThread.contextClassLoader = contextClassLoader
 		}
@@ -87,7 +87,7 @@ class XtendCompile extends DefaultTask {
 	def compileWithoutDaemon(List<String> arguments) {
 		val result = project.javaexec [
 			main = "org.xtend.compiler.batch.Main"
-			it.classpath = getXtendClasspath //Bug, shouldn't it take precedence?
+			it.classpath = getXtendClasspath
 			setArgs(arguments)
 		]
 		if (result.exitValue != 0) {

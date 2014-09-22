@@ -15,12 +15,18 @@ import com.google.inject.Injector;
 public class Main {
 
 	public static void main(String[] args) {
-		Injector injector = XtendInjectorSingleton.INJECTOR;
-		XtendBatchCompiler xtendBatchCompiler = injector.getInstance(XtendBatchCompiler.class);
 		if ((args == null) || (args.length == 0)) {
 			printUsage();
 			return;
 		}
+		if (!compile(args)) {
+			System.exit(1);
+		}
+	}
+
+	public static boolean compile(String[] args) {
+		Injector injector = XtendInjectorSingleton.INJECTOR;
+		XtendBatchCompiler xtendBatchCompiler = injector.getInstance(XtendBatchCompiler.class);
 		Iterator<String> arguments = Arrays.asList(args).iterator();
 		List<String> sourcePath = Lists.newArrayList();
 		while (arguments.hasNext()) {
@@ -40,9 +46,7 @@ public class Main {
 			}
 		}
 		xtendBatchCompiler.setSourcePath(Joiner.on(File.pathSeparator).join(sourcePath));
-		if (!xtendBatchCompiler.compile()) {
-			System.exit(1);
-		}
+		return xtendBatchCompiler.compile();
 	}
 
 	private static void printUsage() {
