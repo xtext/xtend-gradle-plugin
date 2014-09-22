@@ -1,6 +1,6 @@
 dependencies {
   compile gradleApi()
-  compile 'com.android.tools.build:gradle:0.10+'
+  compile 'com.android.tools.build:gradle:0.12+'
   compile 'com.martiansoftware:nailgun-server:0.9.1'
 	compile 'org.eclipse.core:org.eclipse.core.runtime:3.7.0'
 }

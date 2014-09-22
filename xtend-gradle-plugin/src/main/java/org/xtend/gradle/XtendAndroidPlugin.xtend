@@ -71,7 +71,8 @@ class XtendAndroidPlugin implements Plugin<Project> {
 				]
 				xtendCompile.setDescription('''Compiles the «variant.name» Xtend sources''')
 				variant.registerJavaGeneratingTask(xtendCompile, xtendCompile.targetDir)
-				xtendCompile.dependsOn('''generate«variant.name.toFirstUpper»Sources''')
+				xtendCompile.dependsOn(variant.aidlCompile, variant.renderscriptCompile)
+				xtendCompile.dependsOn(variant.outputs.map[processResources])
 				val classesDir = variant.javaCompile.destinationDir
 				val unenhancedClassesDir = new File(classesDir.absolutePath + "-unenhanced")
 				variant.javaCompile.destinationDir = unenhancedClassesDir
