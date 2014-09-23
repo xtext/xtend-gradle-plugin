@@ -1,9 +1,9 @@
 buildscript {
 	repositories {
-		mavenCentral()
+		jcenter()
 	}
 	dependencies {
-		classpath 'org.xtend:xtend-gradle-plugin:0.1.0'
+		classpath 'org.xtend:xtend-gradle-plugin:0.1.7'
 	}
 }
 
@@ -15,18 +15,14 @@ subprojects {
   version = "0.1.8"
   
   repositories {
-    mavenCentral()
+    jcenter()
   }
   
   dependencies {
     compile localGroovy()
-		compile 'org.eclipse.xtend:org.eclipse.xtend.lib:[2.5.4,)'
-		compile 'com.github.oehme.xtend:xtend-contrib:0.4.5'
+    compile 'org.eclipse.xtend:org.eclipse.xtend.lib:[2.5.4,)'
+    compile 'com.github.oehme.xtend:xtend-contrib:0.4.5'
   }
 	
-	sourceCompatibility = 1.5
-}
-
-task createWrapper(type: Wrapper) {
-  gradleVersion = '1.12'
+  sourceCompatibility = 1.5
 }
