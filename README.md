@@ -25,7 +25,9 @@ buildscript {
     mavenCentral()
   }
   dependencies {
-    classpath 'org.xtend:xtend-gradle-plugin:0.1.+'
+    classpath 'org.xtend:xtend-gradle-plugin:0.2.+'
+    //or
+    classpath 'org.xtend:xtend-android-gradle-plugin:0.2.+'
   }
 }
 ```
@@ -33,7 +35,7 @@ buildscript {
 For normal Java projects add 
 
 ```groovy
-apply plugin: 'xtend'
+apply plugin: 'org.xtend.xtend'
 ```
 
 This will automatically apply the 'java' and 'eclipse' plugins, too.
@@ -41,7 +43,7 @@ This will automatically apply the 'java' and 'eclipse' plugins, too.
 If you are using the new Android build system, add
 
 ```groovy
-apply plugin: 'xtend-android'
+apply plugin: 'org.xtend.xtend-android'
 ```
 
 This will not apply anything else, because there are different android plugins for apps and libraries. Just choose yourself. Also this will not generate Eclipse metadata, since the new Android build system is currently only supported by Android Studio.
