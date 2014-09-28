@@ -9,17 +9,17 @@ bintray {
 		publish = true
 		pkg {
 			repo = 'maven'
-			name = '$project.group.$project.name'
+			name = "${project.group}.${project.name}"
 			desc = project.description
 			publicDownloadNumbers = true
 			licenses = ['EPL-1.0']
-			websiteUrl = 'https://github.com/oehme/$rootProjectName'
-			issueTrackerUrl = 'https://github.com/oehme/$rootProjectName/issues'
-			vcsUrl = 'https://github.com/oehme/$rootProjectName.git'
+			websiteUrl = "https://github.com/oehme/${rootProject.name}"
+			issueTrackerUrl = "https://github.com/oehme/${rootProject.name}/issues"
+			vcsUrl = "https://github.com/oehme/${rootProject.name}.git"
 			version {
 					def gradlePluginsDir = project.file('src/main/resources/META-INF/gradle-plugins')
 					if (gradlePluginsDir.exists()) {
-						def gradlePlugins = gradlePluginsDir.listFiles().collect{'$project.group:project.name:${name.replace(".properties", "")}'}
+						def gradlePlugins = gradlePluginsDir.listFiles().collect{file->"${project.group}:${project.name}:${file.name.replace('.properties', '')}"}
 						attributes = ['gradle-plugin': gradlePlugins.join(',')]
 					}
 			}

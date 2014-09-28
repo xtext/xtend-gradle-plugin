@@ -15,12 +15,12 @@ uploadArchives {
 							 name project.name
 							 description project.description
                packaging 'jar'
-               url 'https://github.com/oehme/$rootProjectName'
+               url "https://github.com/oehme/${rootProject.name}"
  
                scm {
-                   url 'scm:git@github.com:oehme/$rootProjectName.git'
-                   connection 'scm:git@github.com:oehme/$rootProjectName.git'
-                   developerConnection 'scm:git@github.com:oehme/$rootProjectName.git'
+                   url "scm:git@github.com:oehme/${rootProject.name}.git"
+                   connection "scm:git@github.com:oehme/${rootProject.name}.git"
+                   developerConnection "scm:git@github.com:oehme/${rootProject.name}.git"
                }
  
                licenses {

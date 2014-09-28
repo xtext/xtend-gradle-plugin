@@ -9,13 +9,13 @@ buildscript {
 }
 
 subprojects {
+	group = "org.xtend"
+  version = "0.2.0"
+	
 	apply plugin: 'java'
   apply from: "$rootDir/gradle/release.gradle"
- 
-  group = "org.xtend"
-  version = "0.2.0"
-
-  repositories {
+	
+	repositories {
     jcenter()
   }
   
