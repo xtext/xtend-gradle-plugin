@@ -9,7 +9,7 @@ bintray {
 		publish = true
 		pkg {
 			repo = 'maven'
-			name = "${project.group}.${project.name}"
+			name = "${project.group}:${project.name}"
 			desc = project.description
 			publicDownloadNumbers = true
 			licenses = ['EPL-1.0']
