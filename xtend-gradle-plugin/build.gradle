@@ -1,4 +1,4 @@
-ext.description = 'A Gradle Plugin for building Xtend projects'
+description = 'A Gradle Plugin for building Xtend projects'
 
 dependencies {
   compile project(':xtend-base-gradle-plugin')

@@ -1,4 +1,4 @@
-ext.description = 'The base for the xtend and xtend-android plugins'
+description = 'The base for the xtend and xtend-android plugins'
 
 dependencies {
   compile gradleApi()

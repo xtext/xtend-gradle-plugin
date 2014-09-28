@@ -8,8 +8,8 @@ buildscript {
 	}
 }
 
-subprojects {	
-  apply plugin: 'xtend'
+subprojects {
+	apply plugin: 'java'
   apply from: "$rootDir/gradle/release.gradle"
  
   group = "org.xtend"
@@ -19,10 +19,14 @@ subprojects {
     jcenter()
   }
   
-  dependencies {
+	sourceCompatibility = 1.5
+}
+
+configure(subprojects.findAll{name.contains('plugin')}){
+	apply plugin: 'xtend'
+	
+	dependencies {
     compile localGroovy()
     compile 'org.eclipse.xtend:org.eclipse.xtend.lib:2.7.2'
   }
-	
-  sourceCompatibility = 1.5
 }

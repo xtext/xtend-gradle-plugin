@@ -1,4 +1,4 @@
-ext.description = 'A library that provides build tooling not yet present in xtend-core'
+description = 'A library that provides build tooling not yet present in xtend-core'
 
 dependencies {
   compile ('org.eclipse.xtend:org.eclipse.xtend.core:[2.5.4,)') {
