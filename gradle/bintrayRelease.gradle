@@ -17,8 +17,10 @@ bintray {
 			issueTrackerUrl = 'https://github.com/oehme/$rootProjectName/issues'
 			vcsUrl = 'https://github.com/oehme/$rootProjectName.git'
 			version {
-					if (project.hasProperty('gradlePluginName')) {
-						attributes += ['gradle-plugin': '$project.group:project.name:$project.gradlePluginName']
+					def gradlePluginsDir = project.file('src/main/resources/META-INF/gradle-plugins')
+					if (gradlePluginsDir.exists()) {
+						def gradlePluginName = gradlePluginsDir.listFiles().first().name
+						attributes = ['gradle-plugin': '$project.group:project.name:$gradlePluginName']
 					}
 			}
 		}

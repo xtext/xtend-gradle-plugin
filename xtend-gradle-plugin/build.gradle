@@ -1,16 +1,5 @@
 ext.description = 'A Gradle Plugin for building Xtend projects'
 
 dependencies {
-  compile gradleApi()
-  compile 'com.android.tools.build:gradle:0.13+'
-  compile 'com.martiansoftware:nailgun-server:0.9.1'
-	compile 'org.eclipse.core:org.eclipse.core.runtime:3.7.0'
+  compile project(':xtend-base-gradle-plugin')
 }
-
-jar {
-  manifest {
-    attributes("Implementation-Version": version)
-  }
-} 
-
-project.test.dependsOn project(":xtend-gradle-lib").install

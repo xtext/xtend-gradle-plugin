@@ -1,0 +1,6 @@
+ext.description = 'A Gradle Plugin that integrates Xtend into the Android build system'
+
+dependencies {
+  compile project(':xtend-base-gradle-plugin')
+	compile 'com.android.tools.build:gradle:0.13+'
+}
