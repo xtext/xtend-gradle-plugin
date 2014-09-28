@@ -1,1 +1,1 @@
-include 'xtend-base-gradle-plugin', 'xtend-android-gradle-plugin', 'xtend-gradle-plugin','xtend-gradle-lib'
+include 'xtend-android-gradle-plugin', 'xtend-gradle-plugin','xtend-gradle-lib'

@@ -1,5 +1,13 @@
 description = 'A Gradle Plugin for building Xtend projects'
 
 dependencies {
-  compile project(':xtend-base-gradle-plugin')
+  compile gradleApi()
+  compile 'com.martiansoftware:nailgun-server:0.9.1'
+	compile 'org.eclipse.core:org.eclipse.core.runtime:3.7.0'
 }
+
+jar {
+  manifest {
+    attributes("Implementation-Version": version)
+  }
+} 
