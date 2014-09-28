@@ -1,22 +1,22 @@
 package org.xtend.gradle.tasks
 
-import de.oehme.xtend.contrib.Property
 import java.util.regex.Pattern
 import org.gradle.api.GradleException
 import org.gradle.api.Project
 import org.gradle.api.file.FileCollection
 
 import static extension org.xtend.gradle.GradleExtensions.*
+import org.eclipse.xtend.lib.annotations.Accessors
 
 class XtendExtension {
 
 	Project project
-	@Property String encoding = "UTF-8"
-	@Property boolean hideSyntheticVariables = true
-	@Property boolean xtendAsPrimaryDebugSource = false
-	@Property boolean fork = false
-	@Property boolean useDaemon = false
-	@Property int daemonPort = 3032
+	@Accessors String encoding = "UTF-8"
+	@Accessors boolean hideSyntheticVariables = true
+	@Accessors boolean xtendAsPrimaryDebugSource = false
+	@Accessors boolean fork = false
+	@Accessors boolean useDaemon = false
+	@Accessors int daemonPort = 3032
 
 	new(Project project) {
 		this.project = project

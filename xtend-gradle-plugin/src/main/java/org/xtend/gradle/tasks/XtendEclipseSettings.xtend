@@ -1,6 +1,5 @@
 package org.xtend.gradle.tasks
 
-import de.oehme.xtend.contrib.Property
 import java.io.File
 import org.gradle.api.DefaultTask
 import org.gradle.api.internal.plugins.DslObject
@@ -8,10 +7,11 @@ import org.gradle.api.plugins.JavaPluginConvention
 import org.gradle.api.tasks.Input
 import org.gradle.api.tasks.TaskAction
 import com.google.common.base.CharMatcher
+import org.eclipse.xtend.lib.annotations.Accessors
 
 class XtendEclipseSettings extends DefaultTask {
-	@Input @Property Boolean hideSyntheticVariables
-	@Input @Property Boolean xtendAsPrimaryDebugSource
+	@Input @Accessors Boolean hideSyntheticVariables
+	@Input @Accessors Boolean xtendAsPrimaryDebugSource
 
 	@TaskAction
 	def writeSettings() {

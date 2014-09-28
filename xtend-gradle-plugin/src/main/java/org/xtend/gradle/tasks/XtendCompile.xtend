@@ -1,6 +1,5 @@
 package org.xtend.gradle.tasks
 
-import de.oehme.xtend.contrib.Property
 import java.io.File
 import java.net.URLClassLoader
 import java.util.List
@@ -15,16 +14,17 @@ import org.gradle.api.tasks.TaskAction
 import org.gradle.internal.classloader.FilteringClassLoader
 
 import static extension org.xtend.gradle.GradleExtensions.*
+import org.eclipse.xtend.lib.annotations.Accessors
 
 class XtendCompile extends DefaultTask {
-	@InputFiles @Property SourceDirectorySet srcDirs
-	@InputFiles @Property FileCollection classpath
-	@OutputDirectory @Property File targetDir
-	@Input @Property String encoding
-	@InputFiles @Property FileCollection xtendClasspath
-	@Input @Property Boolean fork
-	@Input @Property Boolean useDaemon
-	@Input @Property Integer daemonPort
+	@InputFiles @Accessors SourceDirectorySet srcDirs
+	@InputFiles @Accessors FileCollection classpath
+	@OutputDirectory @Accessors File targetDir
+	@Input @Accessors String encoding
+	@InputFiles @Accessors FileCollection xtendClasspath
+	@Input @Accessors Boolean fork
+	@Input @Accessors Boolean useDaemon
+	@Input @Accessors Integer daemonPort
 
 	@TaskAction
 	def compile() {
@@ -59,7 +59,10 @@ class XtendCompile extends DefaultTask {
 			Thread.currentThread.contextClassLoader = classLoader
 			val main = classLoader.loadClass("org.xtend.compiler.batch.Main")
 			val compileMethod = main.getMethod("compile", typeof(String[]))
-			compileMethod.invoke(null, #[arguments as String[]])
+			val success = compileMethod.invoke(null, #[arguments as String[]]) as Boolean
+			if (!success) {
+				throw new GradleException("Xtend Compilation failed");
+			}
 		} finally {
 			Thread.currentThread.contextClassLoader = contextClassLoader
 		}

@@ -1,6 +1,5 @@
 package org.xtend.gradle.tasks;
 
-import de.oehme.xtend.contrib.Property
 import java.io.File
 import java.net.URLClassLoader
 import java.util.List
@@ -14,17 +13,18 @@ import org.gradle.api.tasks.TaskAction
 import org.gradle.internal.classloader.FilteringClassLoader
 
 import static extension org.xtend.gradle.GradleExtensions.*
+import org.eclipse.xtend.lib.annotations.Accessors
 
 class XtendEnhance extends DefaultTask {
-	@InputFiles @Property FileCollection sourceFolders;
-	@InputFiles @Property FileCollection xtendClasspath
-	@Input @Property File classesFolder;
-	@OutputDirectory @Property File targetFolder
-	@Input @Property Boolean hideSyntheticVariables;
-	@Input @Property Boolean xtendAsPrimaryDebugSource;
-	@Input @Property Boolean fork
-	@Input @Property Boolean useDaemon
-	@Input @Property Integer daemonPort
+	@InputFiles @Accessors FileCollection sourceFolders;
+	@InputFiles @Accessors FileCollection xtendClasspath
+	@Input @Accessors File classesFolder;
+	@OutputDirectory @Accessors File targetFolder
+	@Input @Accessors Boolean hideSyntheticVariables;
+	@Input @Accessors Boolean xtendAsPrimaryDebugSource;
+	@Input @Accessors Boolean fork
+	@Input @Accessors Boolean useDaemon
+	@Input @Accessors Integer daemonPort
 
 	@TaskAction
 	def enhance() {

@@ -4,24 +4,24 @@ buildscript {
 	}
 	dependencies {
 		classpath 'org.xtend:xtend-gradle-plugin:0.1.7'
+		classpath "com.jfrog.bintray.gradle:gradle-bintray-plugin:0.5"
 	}
 }
 
 subprojects {	
   apply plugin: 'xtend'
-  apply from: '../mavenRelease.gradle'
+  apply from: "$rootDir/gradle/release.gradle"
  
   group = "org.xtend"
-  version = "0.1.8"
-  
+  version = "0.2.0"
+
   repositories {
     jcenter()
   }
   
   dependencies {
     compile localGroovy()
-    compile 'org.eclipse.xtend:org.eclipse.xtend.lib:[2.5.4,)'
-    compile 'com.github.oehme.xtend:xtend-contrib:0.4.5'
+    compile 'org.eclipse.xtend:org.eclipse.xtend.lib:2.7.2'
   }
 	
   sourceCompatibility = 1.5

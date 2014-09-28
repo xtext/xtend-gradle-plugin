@@ -1,0 +1,26 @@
+apply plugin: 'signing'
+apply from: "$rootDir/gradle/mavenRelease.gradle"
+apply from: "$rootDir/gradle/bintrayRelease.gradle"
+
+task release(dependsOn: [bintrayUpload, uploadArchives], description: 'Releases artifacts to public repositories')
+
+task javadocJar(type: Jar, dependsOn: javadoc) {
+    classifier = 'javadoc'
+    from 'build/docs/javadoc'
+}
+ 
+task sourcesJar(type: Jar) {
+    classifier = 'sources'
+    from sourceSets.main.allSource
+}
+
+artifacts {
+    archives jar
+    archives javadocJar
+    archives sourcesJar
+}
+
+signing {
+    required {gradle.taskGraph.hasTask("release")}
+    sign configurations.archives
+}

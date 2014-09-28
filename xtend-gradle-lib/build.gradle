@@ -1,11 +1,8 @@
+ext.description = 'A library that provides build tooling not yet present in xtend-core'
+
 dependencies {
   compile ('org.eclipse.xtend:org.eclipse.xtend.core:[2.5.4,)') {
     exclude group:'asm', module:'asm'
   }
   compile 'com.martiansoftware:nailgun-server:0.9.1'
-}
-
-uploadArchives.repositories.mavenDeployer.pom.project {
-  name 'Xtend Gradle Library'
-  description 'A library that provides build tooling not yet present in xtend-core'
 }

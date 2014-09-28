@@ -1,0 +1,25 @@
+apply plugin: 'com.jfrog.bintray'
+
+bintray {
+		user = 'oehme'
+		if (project.hasProperty('bintrayApiKey')) {
+			key = bintrayApiKey
+		}
+		configurations = ['archives']
+		publish = true
+		pkg {
+			repo = 'maven'
+			name = '$project.group.$project.name'
+			desc = project.description
+			publicDownloadNumbers = true
+			licenses = ['EPL-1.0']
+			websiteUrl = 'https://github.com/oehme/$rootProjectName'
+			issueTrackerUrl = 'https://github.com/oehme/$rootProjectName/issues'
+			vcsUrl = 'https://github.com/oehme/$rootProjectName.git'
+			version {
+					if (project.hasProperty('gradlePluginName')) {
+						attributes += ['gradle-plugin': '$project.group:project.name:$project.gradlePluginName']
+					}
+			}
+		}
+}

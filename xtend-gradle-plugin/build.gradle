@@ -1,3 +1,5 @@
+ext.description = 'A Gradle Plugin for building Xtend projects'
+
 dependencies {
   compile gradleApi()
   compile 'com.android.tools.build:gradle:0.13+'
@@ -10,10 +12,5 @@ jar {
     attributes("Implementation-Version": version)
   }
 } 
-
-uploadArchives.repositories.mavenDeployer.pom.project {
-  name 'Xtend Gradle Plugin'
-  description 'A Gradle Plugin for building Xtend projects'
-}
 
 project.test.dependsOn project(":xtend-gradle-lib").install

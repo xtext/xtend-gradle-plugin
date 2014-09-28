@@ -52,9 +52,9 @@ class XtendAndroidPlugin implements Plugin<Project> {
 				sourceDirs += #[
 					variant.aidlCompile.sourceOutputDir,
 					variant.generateBuildConfig.sourceOutputDir,
-					variant.renderscriptCompile.sourceOutputDir,
-					variant.processResources.sourceOutputDir
+					variant.renderscriptCompile.sourceOutputDir					
 				]
+				sourceDirs += variant.outputs.map[processResources.sourceOutputDir]
 				xtendSources.xtend.srcDirs = sourceDirs
 				xtendSources.xtendOutputDir = '''build/xtend-gen/«variant.name»'''
 				val xtendCompile = project.tasks.create(compileTaskName, XtendCompile)
