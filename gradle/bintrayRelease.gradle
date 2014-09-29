@@ -19,8 +19,11 @@ bintray {
 			version {
 					def gradlePluginsDir = project.file('src/main/resources/META-INF/gradle-plugins')
 					if (gradlePluginsDir.exists()) {
-						def gradlePlugins = gradlePluginsDir.listFiles().collect{file->"${project.group}:${project.name}:${file.name.replace('.properties', '')}"}
-						attributes = ['gradle-plugin': gradlePlugins.join(',')]
+						def gradlePlugins = gradlePluginsDir.listFiles().collect{file->
+							def pluginName = file.name.replace('.properties', '')
+							"${pluginName}:${project.group}:${project.name}"
+						}
+						attributes = ['gradle-plugin': gradlePlugins]
 					}
 			}
 		}
