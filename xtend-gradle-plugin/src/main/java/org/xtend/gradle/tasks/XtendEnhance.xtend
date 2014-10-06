@@ -29,7 +29,8 @@ class XtendEnhance extends DefaultTask {
 	@TaskAction
 	def enhance() {
 		if(!getClassesFolder.exists) return;
-		for (folder : getSourceFolders.files) {
+		val existingSourceFolders = getSourceFolders.files.filter[exists]
+		for (folder : existingSourceFolders) {
 			if(!folder.directory) throw new GradleException('''«folder» is not a directory''')
 		}
 
@@ -47,7 +48,7 @@ class XtendEnhance extends DefaultTask {
 			enhanceArguments += #["-xtendAsPrimary"]
 		}
 		enhanceArguments += #[
-			getSourceFolders.files.join(" ")
+			existingSourceFolders.join(" ")
 		]
 
 		project.copy [

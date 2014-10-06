@@ -28,7 +28,7 @@ class XtendCompile extends DefaultTask {
 
 	@TaskAction
 	def compile() {
-		val sourcePath = getSrcDirs.srcDirTrees.map[dir.absolutePath].join(File.pathSeparator)
+		val sourcePath = getSrcDirs.srcDirTrees.filter[dir.exists].map[dir.absolutePath].join(File.pathSeparator)
 		val compilerArguments = #[
 			"-cp",
 			getClasspath.asPath,
