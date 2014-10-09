@@ -123,6 +123,6 @@ dependencies {
 Limitations
 -----------
 
-This plugin supports Xtend 2.5.4 and higher. For the android plugin, version 0.10 or higher is supported.
+This plugin supports Xtend 2.5.4 and higher. For the android plugin, version 0.13 or higher is supported.
 
 Also, the behaviour and API are still subject to change. Please file issues here if anything doesn't work as you would expect.
