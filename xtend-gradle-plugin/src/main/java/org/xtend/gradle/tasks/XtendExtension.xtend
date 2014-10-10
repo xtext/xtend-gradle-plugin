@@ -1,22 +1,27 @@
 package org.xtend.gradle.tasks
 
+import java.net.URLClassLoader
 import java.util.regex.Pattern
+import org.eclipse.xtend.lib.annotations.Accessors
 import org.gradle.api.GradleException
 import org.gradle.api.Project
 import org.gradle.api.file.FileCollection
+import org.gradle.internal.classloader.FilteringClassLoader
 
 import static extension org.xtend.gradle.GradleExtensions.*
-import org.eclipse.xtend.lib.annotations.Accessors
 
 class XtendExtension {
 
+	static val currentCompilerClassLoader = new ThreadLocal<URLClassLoader>() {
+		override protected initialValue() {
+			null
+		}
+	}
+	
 	Project project
 	@Accessors String encoding = "UTF-8"
 	@Accessors boolean hideSyntheticVariables = true
 	@Accessors boolean xtendAsPrimaryDebugSource = false
-	@Accessors boolean fork = false
-	@Accessors boolean useDaemon = false
-	@Accessors int daemonPort = 3032
 
 	new(Project project) {
 		this.project = project
@@ -48,5 +53,25 @@ class XtendExtension {
 		}
 		throw new GradleException(
 			'''Could not infer Xtend classpath, because no Xtend jar was found on the «classpath» classpath''')
+	}
+
+	static package def ClassLoader getCompilerClassLoader(FileCollection classpath) {
+		val classPathWithoutLog4j = classpath.filter[!name.contains("log4j")]
+		val urls = classPathWithoutLog4j.map[absoluteFile.toURI.toURL].toList
+		val currentClassLoader = currentCompilerClassLoader.get
+		if (currentClassLoader !== null && currentClassLoader.URLs.toList == urls) {
+			return currentClassLoader
+		} else {
+			val newClassLoader = new URLClassLoader(urls, loggingBridgeClassLoader)
+			currentCompilerClassLoader.set(newClassLoader)
+			return newClassLoader
+		}
+	}
+
+	static private def loggingBridgeClassLoader() {
+		new FilteringClassLoader(XtendExtension.classLoader) => [
+			allowPackage("org.slf4j")
+			allowPackage("org.apache.log4j")
+		]
 	}
 }

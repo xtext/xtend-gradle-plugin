@@ -1,6 +1,8 @@
 package org.xtend.compiler.batch;
 
 import java.io.File;
+import java.lang.reflect.InvocationTargetException;
+import java.lang.reflect.Method;
 import java.util.Arrays;
 import java.util.Iterator;
 import java.util.List;
@@ -9,6 +11,7 @@ import org.eclipse.xtend.core.XtendInjectorSingleton;
 import org.eclipse.xtend.core.compiler.batch.XtendBatchCompiler;
 
 import com.google.common.base.Joiner;
+import com.google.common.base.Throwables;
 import com.google.common.collect.Lists;
 import com.google.inject.Injector;
 
@@ -35,6 +38,17 @@ public class Main {
 				xtendBatchCompiler.setOutputPath(arguments.next().trim());
 			} else if ("-classpath".equals(argument.trim()) || "-cp".equals(argument.trim())) {
 				xtendBatchCompiler.setClassPath(arguments.next().trim());
+			} else if ("-bootClasspath".equals(argument.trim())) {
+				try {
+					Method bootClasspathSetter = XtendBatchCompiler.class.getMethod("setBootClassPath", String.class);
+					bootClasspathSetter.invoke(xtendBatchCompiler, arguments.next().trim());
+				} catch (NoSuchMethodException e) {
+					throw new IllegalArgumentException("the - bootClasspath option is only supported by Xtend 2.7 or higher");
+				} catch (IllegalAccessException e) {
+					Throwables.propagate(e);
+				} catch (InvocationTargetException e) {
+					Throwables.propagate(e.getCause());
+				}
 			} else if ("-tempdir".equals(argument.trim()) || "-td".equals(argument.trim())) {
 				xtendBatchCompiler.setTempDirectory(arguments.next().trim());
 			} else if ("-encoding".equals(argument.trim())) {

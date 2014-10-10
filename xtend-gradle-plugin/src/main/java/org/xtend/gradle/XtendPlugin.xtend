@@ -35,25 +35,26 @@ class XtendPlugin implements Plugin<Project> {
 		val java = project.convention.getPlugin(JavaPluginConvention)
 		java.sourceSets.all [ sourceSet |
 			sourceSet.compileClasspath = sourceSet.compileClasspath + project.configurations.getAt("xtendCompileOnly")
-			
 			val xtendSourceSet = new DefaultXtendSourceSet(fileResolver)
 			xtendSourceSet.xtend.source(sourceSet.java)
-			xtendSourceSet.xtendOutputDir= '''«project.buildDir»/xtend-gen/«sourceSet.name»'''
+			xtendSourceSet.xtendOutputDir = '''«project.buildDir»/xtend-gen/«sourceSet.name»'''
 			new DslObject(sourceSet).convention.plugins.put("xtend", xtendSourceSet);
-			
 			val compileTaskName = sourceSet.getCompileTaskName("xtend")
+			val javaCompile = project.tasks.getAt(sourceSet.compileJavaTaskName) as JavaCompile
 			val compileTask = project.tasks.create(compileTaskName, XtendCompile) [
 				srcDirs = xtendSourceSet.xtend
 				classpath = sourceSet.compileClasspath
-				conventionMapping(#{"targetDir" -> [|xtendSourceSet.xtendOutputDir]})
+				conventionMapping(
+					#{
+						"targetDir" -> [|xtendSourceSet.xtendOutputDir],
+						"bootClasspath" -> [|javaCompile.options.bootClasspath]
+					})
 				setDescription('''Compiles the «sourceSet.name» Xtend sources''')
 			]
-			val javaCompile = project.tasks.getAt(sourceSet.compileJavaTaskName) as JavaCompile
 			project.afterEvaluate [
 				sourceSet.java.srcDir(compileTask.targetDir)
 			]
 			javaCompile.dependsOn(compileTask)
-			
 			val classesDir = sourceSet.output.classesDir
 			val unenhancedClassesDir = new File(classesDir.absolutePath + "-unenhanced")
 			val enhanceTaskName = '''install«sourceSet.name.toFirstUpper»XtendDebugInfo'''
