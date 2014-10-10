@@ -68,11 +68,7 @@ Options
 You can change compiler options through the Xtend DSL object. All of them have good defaults.
 
 ```groovy
-xtend {
-  //Run the compiler in a fresh JVM. Default is false
-  fork = true
-  //Useful when you do many incremental builds. Default is false, only used in conjuction with fork=true
-  useDaemon = true              
+xtend {            
   //Default is false for Java and true for Android
   xtendAsPrimaryDebugSource = true
   //Default is true for Java and false for Android
