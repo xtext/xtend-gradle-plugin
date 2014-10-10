@@ -16,9 +16,9 @@ Features
 
 Getting Started
 ------
-For normal Java projects use [org.xtend.xtend](http://plugins.gradle.org/plugin/org.xtend.xtend). This will automatically apply the 'java' and 'eclipse' plugins, too.
+For normal Java projects use the [org.xtend.xtend](http://plugins.gradle.org/plugin/org.xtend.xtend) plugin. This will automatically apply the 'java' and 'eclipse' plugins, too.
   
-If you are using the new Android build system, use [org.xtend.xtend-android](http://plugins.gradle.org/plugin/org.xtend.xtend-android). This will not apply anything else, because there are different android plugins for apps and libraries. Just choose yourself. Also this will not generate Eclipse metadata, since the new Android build system is currently only supported by Android Studio.
+For the new Android build system, use [org.xtend.xtend-android](http://plugins.gradle.org/plugin/org.xtend.xtend-android). This will not apply anything else, because there are different android plugins for apps and libraries. Just choose yourself. Also this will not generate Eclipse metadata, since the new Android build system is currently only supported by Android Studio.
     
 Now you just need xtend.lib.
 
@@ -28,7 +28,7 @@ repositories {
 }
 
 dependencies {
-  compile 'org.eclipse.xtend:org.eclipse.xtend.lib:2.6.+'
+  compile 'org.eclipse.xtend:org.eclipse.xtend.lib:2.7.+'
 }
 ```
 
@@ -76,7 +76,7 @@ If your code and all of its dependencies work without Google Guava, then you can
 
 ```groovy
 dependencies {
-  compile 'org.eclipse.xtext:org.eclipse.xtext.xbase.lib.slim:2.6.+'
+  compile 'org.eclipse.xtext:org.eclipse.xtext.xbase.lib.slim:2.7.+'
 }
 ```
 
