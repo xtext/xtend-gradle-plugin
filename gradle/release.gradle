@@ -2,9 +2,9 @@ apply plugin: 'signing'
 apply from: "$rootDir/gradle/mavenRelease.gradle"
 apply from: "$rootDir/gradle/bintrayRelease.gradle"
 
-def isRelease = {gradle.taskGraph.hasTask("release")}
-
 task release(dependsOn: [bintrayUpload, uploadArchives], description: 'Releases artifacts to public repositories')
+
+def isRelease = {gradle.taskGraph.hasTask(release)}
 
 javadoc.onlyIf isRelease
 tasks.withType(Sign) {
