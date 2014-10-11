@@ -11,11 +11,15 @@ import com.google.inject.Injector;
 public class Main {
 
 	public static void main(String[] args) {
+		enhance(args);
+	}
+
+	public static boolean enhance(String[] args) {
 		Injector injector = XtendInjectorSingleton.INJECTOR;
 		XtendDebugInfoInstaller installer = injector.getInstance(XtendDebugInfoInstaller.class);
 		if ((args == null) || (args.length == 0)) {
 			printUsage();
-			return;
+			return false;
 		}
 		Iterator<String> arguments = Arrays.asList(args).iterator();
 		while (arguments.hasNext()) {
@@ -32,7 +36,13 @@ public class Main {
 				installer.getInputDirectories().add(new File(argument));
 			}
 		}
-		installer.installDebugInfo();
+		try {
+			installer.installDebugInfo();
+		} catch (Exception e) {
+			e.printStackTrace(System.out);
+			return false;
+		}
+		return true;
 	}
 
 	private static void printUsage() {

@@ -12,12 +12,6 @@ import static extension org.xtend.gradle.GradleExtensions.*
 
 class XtendExtension {
 
-	static val currentCompilerClassLoader = new ThreadLocal<URLClassLoader>() {
-		override protected initialValue() {
-			null
-		}
-	}
-	
 	Project project
 	@Accessors String encoding = "UTF-8"
 	@Accessors boolean hideSyntheticVariables = true
@@ -53,6 +47,12 @@ class XtendExtension {
 		}
 		throw new GradleException(
 			'''Could not infer Xtend classpath, because no Xtend jar was found on the «classpath» classpath''')
+	}
+	
+	static val currentCompilerClassLoader = new ThreadLocal<URLClassLoader>() {
+		override protected initialValue() {
+			null
+		}
 	}
 
 	static package def ClassLoader getCompilerClassLoader(FileCollection classpath) {

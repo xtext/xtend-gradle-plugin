@@ -1,9 +1,7 @@
 package org.xtend.gradle.tasks;
 
 import java.io.File
-import java.util.List
 import org.eclipse.xtend.lib.annotations.Accessors
-import org.gradle.api.DefaultTask
 import org.gradle.api.GradleException
 import org.gradle.api.file.FileCollection
 import org.gradle.api.tasks.Input
@@ -13,9 +11,8 @@ import org.gradle.api.tasks.TaskAction
 
 import static extension org.xtend.gradle.GradleExtensions.*
 
-class XtendEnhance extends DefaultTask {
+class XtendEnhance extends XtendTask {
 	@InputFiles @Accessors FileCollection sourceFolders;
-	@InputFiles @Accessors FileCollection xtendClasspath
 	@Input @Accessors File classesFolder;
 	@OutputDirectory @Accessors File targetFolder
 	@Input @Accessors Boolean hideSyntheticVariables;
@@ -50,21 +47,6 @@ class XtendEnhance extends DefaultTask {
 			from = getClassesFolder.absolutePath
 			into = getTargetFolder.absolutePath
 		]
-		enhance(enhanceArguments)
+		invoke("org.xtend.enhance.batch.Main", "enhance", enhanceArguments)
 	}
-
-	def enhance(List<String> arguments) {
-		System.setProperty("org.eclipse.emf.common.util.ReferenceClearingQueue", "false")
-		val contextClassLoader = Thread.currentThread.contextClassLoader
-		val classLoader = XtendExtension.getCompilerClassLoader(getXtendClasspath)
-		try {
-			Thread.currentThread.contextClassLoader = classLoader
-			val main = classLoader.loadClass("org.xtend.enhance.batch.Main")
-			val mainMethod = main.getMethod("main", typeof(String[]))
-			mainMethod.invoke(null, #[arguments as String[]])
-		} finally {
-			Thread.currentThread.contextClassLoader = contextClassLoader
-		}
-	}
-
 }
