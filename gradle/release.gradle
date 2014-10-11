@@ -19,14 +19,18 @@ task javadocJar(type: Jar, dependsOn: javadoc) {
  
 task sourcesJar(type: Jar) {
     onlyIf isRelease
-		classifier = 'sources'
+    classifier = 'sources'
     from sourceSets.main.allSource
 }
 
 artifacts {
-    archives jar
-    archives javadocJar
-    archives sourcesJar
+	archives jar
+	gradle.taskGraph.whenReady {
+		if (isRelease()) {
+			archives javadocJar
+			archives sourcesJar
+		}
+	}
 }
 
 signing {
