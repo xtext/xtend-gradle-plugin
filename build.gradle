@@ -22,7 +22,7 @@ subprojects {
 	sourceCompatibility = 1.5
 }
 
-configure(subprojects.findAll{name.contains('plugin')}){
+configure(subprojects.findAll{p-> p.name.contains('plugin')}){
 	apply plugin: 'org.xtend.xtend'
 	
 	dependencies {
