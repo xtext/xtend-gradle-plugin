@@ -4,12 +4,16 @@ apply from: "$rootDir/gradle/bintrayRelease.gradle"
 
 task release(dependsOn: [bintrayUpload, uploadArchives], description: 'Releases artifacts to public repositories')
 
+javadoc.onlyIf {gradle.taskGraph.hasTask("release")}
+
 task javadocJar(type: Jar, dependsOn: javadoc) {
+    onlyIf {gradle.taskGraph.hasTask("release")}
     classifier = 'javadoc'
     from 'build/docs/javadoc'
 }
  
 task sourcesJar(type: Jar) {
+    onlyIf {gradle.taskGraph.hasTask("release")}
     classifier = 'sources'
     from sourceSets.main.allSource
 }
