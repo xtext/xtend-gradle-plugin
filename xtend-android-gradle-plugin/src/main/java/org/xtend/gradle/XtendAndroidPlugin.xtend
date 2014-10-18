@@ -68,6 +68,7 @@ class XtendAndroidPlugin implements Plugin<Project> {
 						project.plugins.<LibraryPlugin>getPlugin(LibraryPlugin)
 					}
 					xtendCompile.bootClasspath = androidPlugin.bootClasspath.join(File.pathSeparator)
+					xtendCompile.classpath = xtendCompile.classpath + project.files(androidPlugin.bootClasspath)
 				]
 				xtendCompile.setDescription('''Compiles the «variant.name» Xtend sources''')
 				variant.registerJavaGeneratingTask(xtendCompile, xtendCompile.targetDir)
