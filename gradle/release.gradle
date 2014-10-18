@@ -6,31 +6,27 @@ task release(dependsOn: [bintrayUpload, uploadArchives], description: 'Releases 
 
 def isRelease = {gradle.taskGraph.hasTask(release)}
 
-javadoc.onlyIf isRelease
+//javadoc.onlyIf isRelease
 tasks.withType(Sign) {
     onlyIf isRelease
 }
 
 task javadocJar(type: Jar, dependsOn: javadoc) {
-    onlyIf isRelease
+    //onlyIf isRelease
     classifier = 'javadoc'
     from 'build/docs/javadoc'
 }
  
 task sourcesJar(type: Jar) {
-    onlyIf isRelease
+    //onlyIf isRelease
     classifier = 'sources'
     from sourceSets.main.allSource
 }
 
 artifacts {
 	archives jar
-	gradle.taskGraph.whenReady {
-		if (isRelease()) {
-			archives javadocJar
-			archives sourcesJar
-		}
-	}
+	archives javadocJar
+	archives sourcesJar
 }
 
 signing {
