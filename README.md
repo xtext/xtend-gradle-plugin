@@ -11,12 +11,10 @@ For normal Java projects use the [org.xtend.xtend](http://plugins.gradle.org/plu
   
 For the new Android build system, use [org.xtend.xtend-android](http://plugins.gradle.org/plugin/org.xtend.xtend-android). 
     
-Now you just need xtend.lib.
+Now you just need the Xtend library:
 
 ```groovy
-repositories {
-  mavenCentral()
-}
+repositories.jcenter()
 
 dependencies {
   compile 'org.eclipse.xtend:org.eclipse.xtend.lib:2.7.+'
