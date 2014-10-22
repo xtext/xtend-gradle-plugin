@@ -19,7 +19,7 @@ dependencies {
 }
 ```
 
-Use ```gradle build``` compile and ```gradle eclipse``` to generate Eclipse metadata.
+Use ```gradle build``` to compile and ```gradle eclipse``` to generate Eclipse metadata.
 
 Features
 --------
