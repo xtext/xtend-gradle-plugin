@@ -5,20 +5,11 @@ xtend-gradle-plugin
 
 A gradle plugin for building Xtend projects, **even with the new Android build system!**
 
-Features
---------
-
-- Compiles Xtend sources to Java
-- Enhances Java classes with Xtend debug information
-- Automatically downloads the correct Xtend compiler based on which version of xtend.lib you use
-- Supports both normal Java projects and the new Android build system
-- Hooks into 'gradle eclipse', so the Xtend compiler is configured for your project when you import it into Eclipse
-
 Getting Started
 ------
-For normal Java projects use the [org.xtend.xtend](http://plugins.gradle.org/plugin/org.xtend.xtend) plugin. This will automatically apply the 'java' and 'eclipse' plugins, too.
+For normal Java projects use the [org.xtend.xtend](http://plugins.gradle.org/plugin/org.xtend.xtend) plugin. 
   
-For the new Android build system, use [org.xtend.xtend-android](http://plugins.gradle.org/plugin/org.xtend.xtend-android). This will not apply anything else, because there are different android plugins for apps and libraries. Just choose yourself. Also this will not generate Eclipse metadata, since the new Android build system is currently only supported by Android Studio.
+For the new Android build system, use [org.xtend.xtend-android](http://plugins.gradle.org/plugin/org.xtend.xtend-android). 
     
 Now you just need xtend.lib.
 
@@ -32,7 +23,17 @@ dependencies {
 }
 ```
 
-And you are ready to go. Use ```gradle build``` to compile your code and ```gradle eclipse``` to generate Eclipse project metadata.
+Use ```gradle build``` to compile your code and ```gradle eclipse``` to generate Eclipse project metadata.
+
+Features
+--------
+
+- Compiles Xtend sources to Java
+- Enhances Java classes with Xtend debug information
+- Automatically downloads the correct Xtend compiler based on which version of xtend.lib you use
+- Supports both normal Java projects and the new Android build system
+- Hooks into 'gradle eclipse', so the Xtend compiler is configured for your project when you import it into Eclipse
+
 
 Options
 --------
