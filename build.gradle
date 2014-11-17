@@ -25,10 +25,10 @@ subprojects {
 }
 
 configure(subprojects.findAll{p-> p.name.contains('plugin')}){
+	apply plugin: 'java-gradle-plugin'
 	apply plugin: 'org.xtend.xtend'
 	
 	dependencies {
-    compile localGroovy()
     compile 'org.eclipse.xtend:org.eclipse.xtend.lib:2.7.2'
   }
 }

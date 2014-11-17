@@ -1,7 +1,6 @@
 description = 'A Gradle Plugin for building Xtend projects'
 
 dependencies {
-  compile gradleApi()
 	compile 'org.eclipse.core:org.eclipse.core.runtime:3.7.0'
 }
 
