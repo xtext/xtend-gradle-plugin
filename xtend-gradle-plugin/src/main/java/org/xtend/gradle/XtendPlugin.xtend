@@ -43,10 +43,10 @@ class XtendPlugin implements Plugin<Project> {
 			val javaCompile = project.tasks.getAt(sourceSet.compileJavaTaskName) as JavaCompile
 			val compileTask = project.tasks.create(compileTaskName, XtendCompile) [
 				srcDirs = xtendSourceSet.xtend
-				classpath = sourceSet.compileClasspath
 				conventionMapping(
 					#{
 						"targetDir" -> [|xtendSourceSet.xtendOutputDir],
+						"classpath" -> [|sourceSet.compileClasspath],
 						"bootClasspath" -> [|javaCompile.options.bootClasspath]
 					})
 				setDescription('''Compiles the «sourceSet.name» Xtend sources''')
