@@ -10,6 +10,7 @@ import org.gradle.api.tasks.OutputDirectory
 import org.gradle.api.tasks.TaskAction
 
 import static extension org.xtend.gradle.GradleExtensions.*
+import org.gradle.api.tasks.SkipWhenEmpty
 
 class XtendEnhance extends XtendTask {
 	@InputFiles @Accessors FileCollection sourceFolders;
@@ -17,6 +18,11 @@ class XtendEnhance extends XtendTask {
 	@OutputDirectory @Accessors File targetFolder
 	@Input @Accessors Boolean hideSyntheticVariables;
 	@Input @Accessors Boolean xtendAsPrimaryDebugSource;
+	
+	@InputFiles @SkipWhenEmpty
+	def getTraceFiles() {
+		getSourceFolders.filter[exists].map[project.fileTree(it).filter[path.endsWith("._trace")]].reduce[$0.plus($1)]
+	}
 
 	@TaskAction
 	def enhance() {

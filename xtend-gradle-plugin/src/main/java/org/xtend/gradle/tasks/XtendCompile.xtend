@@ -9,6 +9,7 @@ import org.gradle.api.tasks.InputFiles
 import org.gradle.api.tasks.Optional
 import org.gradle.api.tasks.OutputDirectory
 import org.gradle.api.tasks.TaskAction
+import org.gradle.api.tasks.SkipWhenEmpty
 
 class XtendCompile extends XtendTask {
 	@InputFiles @Accessors SourceDirectorySet srcDirs
@@ -16,13 +17,14 @@ class XtendCompile extends XtendTask {
 	@InputFiles @Optional @Accessors String bootClasspath
 	@OutputDirectory @Accessors File targetDir
 	@Input @Accessors String encoding
-
+	
+	@InputFiles @SkipWhenEmpty
+	def getXtendSources() {
+		getSrcDirs.filter[path.endsWith(".xtend")]
+	}
+	
 	@TaskAction
 	def compile() {
-		if (getSrcDirs.isEmpty) {
-			logger.info("Nothing to compile")
-			return
-		}
 		val sourcePath = getSrcDirs.srcDirTrees.filter[dir.exists].map[dir.absolutePath].join(File.pathSeparator)
 		val compilerArguments = newArrayList(
 			"-cp",

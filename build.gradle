@@ -16,7 +16,7 @@ subprojects {
 	apply plugin: 'de.oehme.sobula.bintray-release'
 
 	group = "org.xtend"
-  version = "0.3.3"
+  version = "0.3.4"
 	
 	repositories {
     jcenter()
@@ -30,6 +30,6 @@ configure(subprojects.findAll{p-> p.name.contains('plugin')}){
 	apply plugin: 'org.xtend.xtend'
 	
 	dependencies {
-    compile 'org.eclipse.xtend:org.eclipse.xtend.lib:2.7.2'
+    compile 'org.eclipse.xtend:org.eclipse.xtend.lib:2.7.3'
   }
 }
