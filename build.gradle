@@ -15,9 +15,9 @@ subprojects {
 	apply plugin: 'com.github.oehme.sobula.stefan'
 
 	group = "org.xtend"
-  version = "0.3.5"
 	
 	bintray.pkg.name = "$project.group:$project.name"
+	
 	repositories {
     jcenter()
   }
