@@ -3,5 +3,4 @@
 .settings/
 .gradle/
 build/
-xtend-gen/
 bin/
