@@ -6,6 +6,8 @@ import java.io.IOException;
 import java.lang.reflect.Field;
 import java.net.URLClassLoader;
 import java.util.List;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 import org.eclipse.emf.ecore.resource.ResourceSet;
 import org.eclipse.xtend.core.compiler.batch.XtendBatchCompiler;
@@ -16,6 +18,7 @@ import com.google.common.collect.Lists;
 import com.google.inject.Inject;
 
 public class FixedXtendBatchCompiler extends XtendBatchCompiler {
+	private static final Logger LOG = Logger.getLogger(FixedXtendBatchCompiler.class.getCanonicalName());
 
 	@Inject
 	private ProcessorInstanceForJvmTypeProvider annotationProcessorFactory;
@@ -31,7 +34,8 @@ public class FixedXtendBatchCompiler extends XtendBatchCompiler {
 				if (classLoader instanceof Closeable) {
 					try {
 						classLoader.close();
-					} catch (IOException ignored) {
+					} catch (IOException e) {
+						LOG.log(Level.WARNING, "Could not close a classloader", e);
 					}
 				}
 			}
@@ -46,9 +50,11 @@ public class FixedXtendBatchCompiler extends XtendBatchCompiler {
 		classLoaders.add(classLoader);
 		try {
 			Field classLoaderField = ProcessorInstanceForJvmTypeProvider.class.getDeclaredField("classLoader");
+			classLoaderField.setAccessible(true);
 			URLClassLoader annotationClassLoader = (URLClassLoader) classLoaderField.get(annotationProcessorFactory);
 			classLoaders.add(annotationClassLoader);
-		} catch (Exception ignored) {
+		} catch (Exception e) {
+			LOG.log(Level.WARNING, "Could not close a classloader", e);
 		}
 	}
 }
