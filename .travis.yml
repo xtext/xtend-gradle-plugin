@@ -4,3 +4,4 @@ cache:
   directories:
   - $HOME/.gradle
 script: ./gradlew check && ./.travis/releaseOnTag.sh
+after_script: :/gradlew --stop
