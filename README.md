@@ -34,20 +34,25 @@ Features
 Options
 --------
 
-You can change compiler options through the Xtend DSL object. All of them have good defaults.
+The compile task has [lots of options](https://github.com/oehme/xtend-gradle-plugin/blob/master/xtend-gradle-plugin/src/main/java/org/xtend/gradle/tasks/XtendOptions.xtend). All of them have good defaults.
 
 ```groovy
-xtend {            
-  //Default is false for Java and true for Android
-  xtendAsPrimaryDebugSource = true
-  //Default is true for Java and false for Android
-  hideSyntheticVariables = false
+tasks.withType(org.xtend.gradle.tasks.XtendCompile) {
   //Default is UTF-8
-  encoding = "UTF-16"
+  options.encoding = "UTF-16"
 }
 ```
 
-You can also change the output folder for each source set. The default is ```build/xtend-gen/${source set name}```
+The eclipse settings task can be configured similarly.
+
+```groovy
+tasks.withType(org.xtend.gradle.tasks.XtendEclipseSettings) {
+  options.xtendAsPrimaryDebugSource = true
+  options.hideSyntheticVariables = false
+}
+```
+
+You can also change the output folder for each source set.
 
 ```groovy
 sourceSets {
