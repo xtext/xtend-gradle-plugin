@@ -2,42 +2,33 @@ package org.xtend.gradle.tasks
 
 import java.net.URLClassLoader
 import java.util.regex.Pattern
-import org.eclipse.xtend.lib.annotations.Accessors
 import org.eclipse.xtend.lib.annotations.Delegate
 import org.gradle.api.Buildable
 import org.gradle.api.GradleException
 import org.gradle.api.Project
 import org.gradle.api.file.FileCollection
 import org.gradle.api.internal.file.collections.MinimalFileSet
-import org.gradle.internal.classloader.FilteringClassLoader
+import org.gradle.api.invocation.Gradle
 
-import static org.xtend.gradle.tasks.XtendExtension.*
+import static org.xtend.gradle.tasks.XtendRuntime.*
 
 import static extension org.xtend.gradle.GradleExtensions.*
 
-class XtendExtension {
+class XtendRuntime {
+	static val XTEND_LIB_PATTERN = Pattern.compile("org.eclipse.(xtend|xtext.xbase).(core|lib|lib.slim|lib.gwt)-(\\d.*?).jar")
 
 	Project project
-	@Accessors String encoding = "UTF-8"
-	@Accessors boolean hideSyntheticVariables = true
-	@Accessors boolean xtendAsPrimaryDebugSource = false
 
 	new(Project project) {
 		this.project = project
 	}
-
-	private def getPluginVersion() {
-		this.class.package.implementationVersion
-	}
-
-	static val pattern = Pattern.compile("org.eclipse.(xtend|xtext.xbase).(core|lib|lib.slim|lib.gwt)-(\\d.*?).jar")
 
 	def FileCollection inferXtendClasspath(FileCollection classpath) {
 		new LazyFileCollection() {
 
 			override createDelegate() {
 				for (file : classpath) {
-					val matcher = pattern.matcher(file.name)
+					val matcher = XTEND_LIB_PATTERN.matcher(file.name)
 					if (matcher.matches) {
 						val xtendVersion = matcher.group(3)
 						val dependencies = #[
@@ -65,6 +56,10 @@ class XtendExtension {
 				}
 			}
 		}
+	}
+
+	private def getPluginVersion() {
+		this.class.package.implementationVersion
 	}
 
 	private static abstract class LazyFileCollection implements FileCollection, MinimalFileSet {
@@ -100,16 +95,9 @@ class XtendExtension {
 		if (currentClassLoader !== null && currentClassLoader.URLs.toList == urls) {
 			return currentClassLoader
 		} else {
-			val newClassLoader = new URLClassLoader(urls, loggingBridgeClassLoader)
+			val newClassLoader = new URLClassLoader(urls, Gradle.classLoader)
 			currentCompilerClassLoader.set(newClassLoader)
 			return newClassLoader
 		}
-	}
-
-	static private def loggingBridgeClassLoader() {
-		new FilteringClassLoader(XtendExtension.classLoader) => [
-			allowPackage("org.slf4j")
-			allowPackage("org.apache.log4j")
-		]
 	}
 }

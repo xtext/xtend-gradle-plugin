@@ -15,10 +15,9 @@ import org.gradle.api.internal.file.FileResolver
 import org.gradle.api.plugins.UnknownPluginException
 import org.xtend.gradle.tasks.DefaultXtendSourceSet
 import org.xtend.gradle.tasks.XtendCompile
-import org.xtend.gradle.tasks.XtendEnhance
-import org.xtend.gradle.tasks.XtendExtension
 
 import static extension org.xtend.gradle.GradleExtensions.*
+import org.xtend.gradle.tasks.XtendRuntime
 
 class XtendAndroidPlugin implements Plugin<Project> {
 
@@ -31,8 +30,7 @@ class XtendAndroidPlugin implements Plugin<Project> {
 
 	override apply(Project project) {
 		project.plugins.<XtendBasePlugin>apply(XtendBasePlugin)
-		val xtend = project.extensions.getByType(XtendExtension)
-		xtend.xtendAsPrimaryDebugSource = true
+		val xtend = project.extensions.getByType(XtendRuntime)
 		project.afterEvaluate [
 			val android = project.extensions.getByName("android") as BaseExtension
 			val variants = if (android instanceof AppExtension) {
@@ -56,12 +54,12 @@ class XtendAndroidPlugin implements Plugin<Project> {
 				]
 				sourceDirs += variant.outputs.map[processResources.sourceOutputDir]
 				xtendSources.xtend.srcDirs = sourceDirs
-				xtendSources.xtendOutputDir = '''build/xtend-gen/«variant.name»'''
+				xtendSources.xtendOutputDir = '''«project.buildDir»/generated/source/xtend/«variant.name»'''
 				val xtendCompile = project.tasks.create(compileTaskName, XtendCompile)
 				xtendCompile.srcDirs = xtendSources.xtend
 				xtendCompile.classpath = variant.javaCompile.classpath
-				xtendCompile.targetDir = xtendSources.xtendOutputDir
-				xtendCompile.doFirst [
+				xtendCompile.destinationDir = xtendSources.xtendOutputDir
+				xtendCompile.beforeExecute [
 					val BasePlugin androidPlugin = try {
 						project.plugins.<AppPlugin>getPlugin(AppPlugin)
 					} catch (UnknownPluginException e) {
@@ -69,30 +67,15 @@ class XtendAndroidPlugin implements Plugin<Project> {
 					}
 					xtendCompile.bootClasspath = androidPlugin.bootClasspath.join(File.pathSeparator)
 					xtendCompile.classpath = xtendCompile.classpath + project.files(androidPlugin.bootClasspath)
+					xtendClasspath = xtendClasspath ?: xtend.inferXtendClasspath(classpath)
+					xtendCompile.classesDir = variant.javaCompile.destinationDir
+					xtendCompile.options.xtendAsPrimaryDebugSource = true
 				]
 				xtendCompile.setDescription('''Compiles the «variant.name» Xtend sources''')
-				variant.registerJavaGeneratingTask(xtendCompile, xtendCompile.targetDir)
-				xtendCompile.dependsOn(variant.aidlCompile, variant.renderscriptCompile)
+				variant.registerJavaGeneratingTask(xtendCompile, xtendCompile.destinationDir)
+				xtendCompile.dependsOn(variant.aidlCompile, variant.renderscriptCompile, variant.generateBuildConfig)
 				xtendCompile.dependsOn(variant.outputs.map[processResources])
-				val classesDir = variant.javaCompile.destinationDir
-				val unenhancedClassesDir = new File(classesDir.absolutePath + "-unenhanced")
-				variant.javaCompile.destinationDir = unenhancedClassesDir
-				val enhanceTaskName = '''install«variant.name.toFirstUpper»XtendDebugInfo'''
-				val enhanceTask = project.tasks.create(enhanceTaskName, XtendEnhance)
-				enhanceTask.sourceFolders = project.files(xtendCompile.targetDir)
-				enhanceTask.classesFolder = unenhancedClassesDir
-				enhanceTask.targetFolder = classesDir
-				enhanceTask.conventionMapping(
-					#{
-						"xtendClasspath" -> [ |
-							xtend.inferXtendClasspath(variant.javaCompile.classpath)
-						]
-					})
-				enhanceTask.doLast[
-					variant.javaCompile.destinationDir = classesDir
-				]
-				enhanceTask.dependsOn(variant.javaCompile)
-				variant.processJavaResources.dependsOn(enhanceTask)
+				variant.javaCompile.doLast[xtendCompile.enhance]
 			]
 		]
 	}

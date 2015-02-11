@@ -1,10 +1,8 @@
 package org.xtend.gradle
 
-import java.io.File
 import javax.inject.Inject
 import org.gradle.api.Plugin
 import org.gradle.api.Project
-import org.gradle.api.file.FileCollection
 import org.gradle.api.internal.file.FileResolver
 import org.gradle.api.internal.plugins.DslObject
 import org.gradle.api.plugins.JavaPlugin
@@ -13,10 +11,9 @@ import org.gradle.api.tasks.compile.JavaCompile
 import org.gradle.plugins.ide.eclipse.EclipsePlugin
 import org.xtend.gradle.tasks.DefaultXtendSourceSet
 import org.xtend.gradle.tasks.XtendCompile
-import org.xtend.gradle.tasks.XtendEnhance
-import org.xtend.gradle.tasks.XtendExtension
 
 import static extension org.xtend.gradle.GradleExtensions.*
+import org.xtend.gradle.tasks.XtendRuntime
 
 class XtendPlugin implements Plugin<Project> {
 
@@ -32,7 +29,9 @@ class XtendPlugin implements Plugin<Project> {
 		project.plugins.<JavaPlugin>apply(JavaPlugin)
 		project.plugins.<EclipsePlugin>apply(EclipsePlugin)
 
+		val xtendRuntime = project.extensions.getByType(XtendRuntime)
 		val java = project.convention.getPlugin(JavaPluginConvention)
+		
 		java.sourceSets.all [ sourceSet |
 			sourceSet.compileClasspath = sourceSet.compileClasspath + project.configurations.getAt("xtendCompileOnly")
 			val xtendSourceSet = new DefaultXtendSourceSet(fileResolver)
@@ -41,37 +40,21 @@ class XtendPlugin implements Plugin<Project> {
 			new DslObject(sourceSet).convention.plugins.put("xtend", xtendSourceSet);
 			val compileTaskName = sourceSet.getCompileTaskName("xtend")
 			val javaCompile = project.tasks.getAt(sourceSet.compileJavaTaskName) as JavaCompile
-			val compileTask = project.tasks.create(compileTaskName, XtendCompile) [
-				srcDirs = xtendSourceSet.xtend
-				conventionMapping(
-					#{
-						"targetDir" -> [|xtendSourceSet.xtendOutputDir],
-						"classpath" -> [|sourceSet.compileClasspath],
-						"bootClasspath" -> [|javaCompile.options.bootClasspath]
-					})
+			val xtendCompile = project.tasks.create(compileTaskName, XtendCompile) [
 				setDescription('''Compiles the «sourceSet.name» Xtend sources''')
+				srcDirs = xtendSourceSet.xtend
+				beforeExecute[
+					destinationDir = xtendSourceSet.xtendOutputDir
+					classpath = sourceSet.compileClasspath
+					xtendClasspath = xtendRuntime.inferXtendClasspath(classpath)
+					bootClasspath = javaCompile.options.bootClasspath
+					classesDir = javaCompile.destinationDir
+					sourceCompatibility = java.sourceCompatibility.toString
+					sourceSet.java.srcDir(destinationDir)
+				]
 			]
-			project.afterEvaluate [
-				sourceSet.java.srcDir(compileTask.targetDir)
-			]
-			javaCompile.dependsOn(compileTask)
-			val classesDir = sourceSet.output.classesDir
-			val unenhancedClassesDir = new File(classesDir.absolutePath + "-unenhanced")
-			val enhanceTaskName = '''install«sourceSet.name.toFirstUpper»XtendDebugInfo'''
-			val enhanceTask = project.tasks.create(enhanceTaskName, XtendEnhance) [
-				targetFolder = classesDir
-				classesFolder = unenhancedClassesDir
-				conventionMapping(
-					#{
-						"xtendClasspath" -> [|
-							project.extensions.getByType(XtendExtension).inferXtendClasspath(
-								sourceSet.compileClasspath)],
-						"sourceFolders" -> [|project.files(compileTask.targetDir) as FileCollection]
-					})
-			]
-			javaCompile.setDestinationDir(unenhancedClassesDir)
-			enhanceTask.dependsOn(javaCompile)
-			project.tasks.getAt(sourceSet.classesTaskName).dependsOn(enhanceTask)
+			javaCompile.dependsOn(xtendCompile)
+			javaCompile.doLast[xtendCompile.enhance]
 		]
 	}
 }

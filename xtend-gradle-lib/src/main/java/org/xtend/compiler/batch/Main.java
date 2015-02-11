@@ -9,6 +9,7 @@ import java.util.List;
 
 import org.eclipse.xtend.core.XtendInjectorSingleton;
 import org.eclipse.xtend.core.compiler.batch.XtendBatchCompiler;
+import org.eclipse.xtext.util.Strings;
 
 import com.google.common.base.Joiner;
 import com.google.common.base.Throwables;
@@ -16,7 +17,7 @@ import com.google.common.collect.Lists;
 import com.google.inject.Injector;
 
 public class Main {
-
+	
 	public static void main(String[] args) {
 		if ((args == null) || (args.length == 0)) {
 			printUsage();
@@ -29,38 +30,52 @@ public class Main {
 
 	public static boolean compile(String[] args) {
 		Injector injector = XtendInjectorSingleton.INJECTOR;
-		FixedXtendBatchCompiler xtendBatchCompiler = injector.getInstance(FixedXtendBatchCompiler.class);
+		FixedXtendBatchCompiler compiler = injector.getInstance(FixedXtendBatchCompiler.class);
 		Iterator<String> arguments = Arrays.asList(args).iterator();
 		List<String> sourcePath = Lists.newArrayList();
 		while (arguments.hasNext()) {
 			String argument = arguments.next();
 			if ("-d".equals(argument.trim())) {
-				xtendBatchCompiler.setOutputPath(arguments.next().trim());
+				compiler.setOutputPath(arguments.next().trim());
 			} else if ("-classpath".equals(argument.trim()) || "-cp".equals(argument.trim())) {
-				xtendBatchCompiler.setClassPath(arguments.next().trim());
+				compiler.setClassPath(arguments.next().trim());
 			} else if ("-bootClasspath".equals(argument.trim())) {
-				try {
-					Method bootClasspathSetter = XtendBatchCompiler.class.getMethod("setBootClassPath", String.class);
-					bootClasspathSetter.invoke(xtendBatchCompiler, arguments.next().trim());
-				} catch (NoSuchMethodException e) {
-					throw new IllegalArgumentException("the - bootClasspath option is only supported by Xtend 2.7 or higher");
-				} catch (IllegalAccessException e) {
-					Throwables.propagate(e);
-				} catch (InvocationTargetException e) {
-					Throwables.propagate(e.getCause());
-				}
+				setOption(compiler, "bootClassPath", arguments.next().trim());
 			} else if ("-tempdir".equals(argument.trim()) || "-td".equals(argument.trim())) {
-				xtendBatchCompiler.setTempDirectory(arguments.next().trim());
+				compiler.setTempDirectory(arguments.next().trim());
 			} else if ("-encoding".equals(argument.trim())) {
-				xtendBatchCompiler.setFileEncoding(arguments.next().trim());
-			} else if ("-useCurrentClassLoader".equals(argument.trim())) {
-				xtendBatchCompiler.setUseCurrentClassLoaderAsParent(true);
+				compiler.setFileEncoding(arguments.next().trim());
+			} else if ("-javaSourceVersion".equals(argument)) {
+				setOption(compiler, "javaSourceVersion", arguments.next().trim());
+			} else if ("-noSuppressWarningsAnnotation".equals(argument)) {
+				setOption(compiler, "generateSyntheticSuppressWarnings", false);
+			} else if ("-generateGeneratedAnnotation".equals(argument)) {
+				setOption(compiler, "generateGeneratedAnnotation", true);
+			} else if ("-includeDateInGeneratedAnnnotation".equals(argument)) {
+				setOption(compiler, "includeDateInGeneratedAnnotation", true);
+			} else if ("-generateAnnotationComment".equals(argument)) {
+				setOption(compiler, "generatedAnnotationComment", arguments.next().trim());
+			}else if ("-useCurrentClassLoader".equals(argument.trim())) {
+				compiler.setUseCurrentClassLoaderAsParent(true);
 			} else {
 				sourcePath.add(argument);
 			}
 		}
-		xtendBatchCompiler.setSourcePath(Joiner.on(File.pathSeparator).join(sourcePath));
-		return xtendBatchCompiler.compile();
+		compiler.setSourcePath(Joiner.on(File.pathSeparator).join(sourcePath));
+		return compiler.compile();
+	}
+	
+	private static void setOption(XtendBatchCompiler compiler, String name, Object value) {
+		try {
+			Method setter = XtendBatchCompiler.class.getMethod("set" + Strings.toFirstUpper(name), value.getClass());
+			setter.invoke(compiler, value);
+		} catch (NoSuchMethodException e) {
+			System.err.println("the - " + name + " option is not supported by this Xtend version");
+		} catch (IllegalAccessException e) {
+			Throwables.propagate(e);
+		} catch (InvocationTargetException e) {
+			Throwables.propagate(e.getCause());
+		}
 	}
 
 	private static void printUsage() {
