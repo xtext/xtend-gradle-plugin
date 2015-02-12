@@ -29,10 +29,10 @@ class XtendCompile extends AbstractCompile {
 
 	@TaskAction
 	override compile() {
-		val sourcePath = getSrcDirs.srcDirTrees.filter[dir.exists].map[dir.absolutePath].join(File.pathSeparator)
+		val sourcePath = getSrcDirs.srcDirTrees.map[dir].filter[exists].map[absolutePath].join(File.pathSeparator)
 		val compilerArguments = newArrayList(
 			"-cp",
-			classpath.asPath,
+			classpath.filter[exists].asPath,
 			"-d",
 			project.file(destinationDir).absolutePath,
 			"-encoding",
