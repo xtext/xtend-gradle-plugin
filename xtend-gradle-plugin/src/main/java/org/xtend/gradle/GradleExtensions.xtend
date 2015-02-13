@@ -12,7 +12,7 @@ class GradleExtensions {
 		taskToConfigure.project.gradle.taskGraph.addTaskExecutionListener(
 			new TaskExecutionAdapter() {
 				override beforeExecute(Task task) {
-					if (task == taskToConfigure) {
+					if (task === taskToConfigure) {
 						action.apply(task as T)
 					}
 				}

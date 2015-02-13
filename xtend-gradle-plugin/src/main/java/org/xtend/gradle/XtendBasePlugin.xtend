@@ -11,12 +11,11 @@ import org.xtend.gradle.tasks.XtendRuntime
 
 class XtendBasePlugin implements Plugin<Project> {
 	Project project
-	XtendRuntime xtend
 	Configuration xtendCompileOnlyConfiguration
 
 	override apply(Project project) {
 		this.project = project
-		xtend = project.extensions.create("xtendRuntime", XtendRuntime, project)
+		project.extensions.create("xtendRuntime", XtendRuntime, project)
 		xtendCompileOnlyConfiguration = project.configurations.create("xtendCompileOnly")
 		project.plugins.<JavaBasePlugin>apply(JavaBasePlugin) //Xtend Bug 435429
 		configureEclipsePluginIfPresent
