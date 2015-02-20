@@ -38,7 +38,7 @@ The compile task has [lots of options](https://github.com/oehme/xtend-gradle-plu
 
 ```groovy
 tasks.withType(org.xtend.gradle.tasks.XtendCompile) {
-  //Default is UTF-8
+  // default is UTF-8
   options.encoding = "UTF-16"
 }
 ```
