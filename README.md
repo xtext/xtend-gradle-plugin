@@ -1,7 +1,7 @@
 xtend-gradle-plugin
 ===================
 
-[![Build Status](https://travis-ci.org/oehme/xtend-gradle-plugin.svg?branch=master)](https://travis-ci.org/oehme/xtend-gradle-plugin)
+[![Build Status](https://travis-ci.org/xtext/xtend-gradle-plugin.svg?branch=master)](https://travis-ci.org/xtext/xtend-gradle-plugin)
 
 A gradle plugin for building Xtend projects, **even with the new Android build system!**
 
