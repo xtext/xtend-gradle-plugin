@@ -9,10 +9,11 @@ import org.gradle.api.plugins.JavaPluginConvention
 import org.gradle.api.tasks.Nested
 import org.gradle.api.tasks.TaskAction
 import org.gradle.api.tasks.Input
+import org.gradle.api.tasks.Optional
 
 @Accessors
 class XtendEclipseSettings extends DefaultTask {
-	@Input String sourceCompatibility;
+	@Input @Optional String sourceCompatibility;
 	@Nested XtendEclipseOptions options = new XtendEclipseOptions
 
 	@TaskAction
@@ -24,7 +25,9 @@ class XtendEclipseSettings extends DefaultTask {
 		settings.putBoolean("hideLocalSyntheticVariables".key, getOptions.hideSyntheticVariables)
 		settings.putBoolean("installDslAsPrimarySource".key, getOptions.xtendAsPrimaryDebugSource)
 		settings.putBoolean("userOutputPerSourceFolder".key, true)
-		settings.put("targetJavaVersion".key, getSourceCompatibility)
+		if (getSourceCompatibility != null) {
+			settings.put("targetJavaVersion".key, getSourceCompatibility)
+		}
 		settings.putBoolean("generateSuppressWarnings".key, getOptions.addSuppressWarnings)
 		getOptions.generatedAnnotation => [
 			settings.putBoolean("generateGeneratedAnnotation".key, isActive)

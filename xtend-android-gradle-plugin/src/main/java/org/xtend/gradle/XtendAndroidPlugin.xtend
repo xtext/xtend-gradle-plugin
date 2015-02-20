@@ -59,17 +59,17 @@ class XtendAndroidPlugin implements Plugin<Project> {
 				xtendCompile.srcDirs = xtendSources.xtend
 				xtendCompile.classpath = variant.javaCompile.classpath
 				xtendCompile.destinationDir = xtendSources.xtendOutputDir
+				val BasePlugin androidPlugin = try {
+					project.plugins.<AppPlugin>getPlugin(AppPlugin)
+				} catch (UnknownPluginException e) {
+					project.plugins.<LibraryPlugin>getPlugin(LibraryPlugin)
+				}
+				xtendCompile.bootClasspath = androidPlugin.bootClasspath.join(File.pathSeparator)
+				xtendCompile.classpath = xtendCompile.classpath + project.files(androidPlugin.bootClasspath)
+				xtendCompile.classesDir = variant.javaCompile.destinationDir
+				xtendCompile.options.xtendAsPrimaryDebugSource = true
 				xtendCompile.beforeExecute [
-					val BasePlugin androidPlugin = try {
-						project.plugins.<AppPlugin>getPlugin(AppPlugin)
-					} catch (UnknownPluginException e) {
-						project.plugins.<LibraryPlugin>getPlugin(LibraryPlugin)
-					}
-					xtendCompile.bootClasspath = androidPlugin.bootClasspath.join(File.pathSeparator)
-					xtendCompile.classpath = xtendCompile.classpath + project.files(androidPlugin.bootClasspath)
-					xtendClasspath = xtendClasspath ?: xtend.inferXtendClasspath(classpath)
-					xtendCompile.classesDir = variant.javaCompile.destinationDir
-					xtendCompile.options.xtendAsPrimaryDebugSource = true
+					xtendClasspath = xtend.inferXtendClasspath(classpath)
 				]
 				xtendCompile.setDescription('''Compiles the «variant.name» Xtend sources''')
 				variant.registerJavaGeneratingTask(xtendCompile, xtendCompile.destinationDir)
