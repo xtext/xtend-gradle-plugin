@@ -30,7 +30,7 @@ public class Main {
 
 	public static boolean compile(String[] args) {
 		Injector injector = XtendInjectorSingleton.INJECTOR;
-		XtendBatchCompiler compiler = injector.getInstance(XtendBatchCompiler.class);
+		XtendBatchCompiler compiler = injector.getInstance(LeakFreeXtendCompiler.class);
 		Iterator<String> arguments = Arrays.asList(args).iterator();
 		List<String> sourcePath = Lists.newArrayList();
 		while (arguments.hasNext()) {
