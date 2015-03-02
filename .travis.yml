@@ -3,4 +3,7 @@ sudo: false
 cache:
   directories:
   - $HOME/.gradle
-script: ./gradlew check && ./.travis/releaseOnTag.sh
+install:
+  - true
+script: 
+  - ./gradlew check && ./.travis/releaseOnTag.sh
