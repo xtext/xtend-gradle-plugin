@@ -1,11 +1,8 @@
 package org.xtend.gradle
 
 import com.android.build.gradle.AppExtension
-import com.android.build.gradle.AppPlugin
 import com.android.build.gradle.BaseExtension
-import com.android.build.gradle.BasePlugin
 import com.android.build.gradle.LibraryExtension
-import com.android.build.gradle.LibraryPlugin
 import java.io.File
 import javax.inject.Inject
 import org.gradle.api.GradleException
@@ -59,13 +56,8 @@ class XtendAndroidPlugin implements Plugin<Project> {
 				xtendCompile.srcDirs = xtendSources.xtend
 				xtendCompile.classpath = variant.javaCompile.classpath
 				xtendCompile.destinationDir = xtendSources.xtendOutputDir
-				val BasePlugin androidPlugin = try {
-					project.plugins.<AppPlugin>getPlugin(AppPlugin)
-				} catch (UnknownPluginException e) {
-					project.plugins.<LibraryPlugin>getPlugin(LibraryPlugin)
-				}
-				xtendCompile.bootClasspath = androidPlugin.bootClasspath.join(File.pathSeparator)
-				xtendCompile.classpath = xtendCompile.classpath + project.files(androidPlugin.bootClasspath)
+				xtendCompile.bootClasspath = android.bootClasspath.join(File.pathSeparator)
+				xtendCompile.classpath = xtendCompile.classpath + project.files(android.bootClasspath)
 				xtendCompile.classesDir = variant.javaCompile.destinationDir
 				xtendCompile.options.xtendAsPrimaryDebugSource = true
 				xtendCompile.beforeExecute [
