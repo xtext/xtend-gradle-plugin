@@ -9,7 +9,6 @@ import org.gradle.api.GradleException
 import org.gradle.api.Plugin
 import org.gradle.api.Project
 import org.gradle.api.internal.file.FileResolver
-import org.gradle.api.plugins.UnknownPluginException
 import org.xtend.gradle.tasks.DefaultXtendSourceSet
 import org.xtend.gradle.tasks.XtendCompile
 
@@ -60,6 +59,7 @@ class XtendAndroidPlugin implements Plugin<Project> {
 				xtendCompile.classpath = xtendCompile.classpath + project.files(android.bootClasspath)
 				xtendCompile.classesDir = variant.javaCompile.destinationDir
 				xtendCompile.options.xtendAsPrimaryDebugSource = true
+				xtendCompile.sourceCompatibility = variant.javaCompile.sourceCompatibility 
 				xtendCompile.beforeExecute [
 					xtendClasspath = xtend.inferXtendClasspath(classpath)
 				]
