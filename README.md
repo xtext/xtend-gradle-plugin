@@ -7,15 +7,17 @@ A gradle plugin for building Xtend projects, **even with the new Android build s
 
 Getting Started
 ------
-Apply the [org.xtend.xtend](http://plugins.gradle.org/plugin/org.xtend.xtend) or  [org.xtend.xtend-android](http://plugins.gradle.org/plugin/org.xtend.xtend-android) plugin. 
-    
-Add the Xtend library
+Apply the latest [org.xtend.xtend](http://plugins.gradle.org/plugin/org.xtend.xtend) or  [org.xtend.xtend-android](http://plugins.gradle.org/plugin/org.xtend.xtend-android) plugin. Then add the Xtend library.
 
 ```groovy
+plugins {
+  id "org.xtend.xtend" version "0.4.7"
+}
+
 repositories.jcenter()
 
 dependencies {
-  compile 'org.eclipse.xtend:org.eclipse.xtend.lib:2.7.+'
+  compile 'org.eclipse.xtend:org.eclipse.xtend.lib:2.8.+'
 }
 ```
 
