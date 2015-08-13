@@ -30,4 +30,5 @@ class GradleExtensions {
 	static def + (FileCollection first, FileCollection second) {
 		first.plus(second)
 	}
+	
 }

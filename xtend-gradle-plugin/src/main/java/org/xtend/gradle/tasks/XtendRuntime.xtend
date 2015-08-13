@@ -2,17 +2,13 @@ package org.xtend.gradle.tasks
 
 import java.net.URLClassLoader
 import java.util.regex.Pattern
-import org.eclipse.xtend.lib.annotations.Delegate
-import org.gradle.api.Buildable
 import org.gradle.api.GradleException
 import org.gradle.api.Project
 import org.gradle.api.file.FileCollection
-import org.gradle.api.internal.file.collections.MinimalFileSet
 import org.gradle.api.invocation.Gradle
 
-import static org.xtend.gradle.tasks.XtendRuntime.*
-
 import static extension org.xtend.gradle.GradleExtensions.*
+import java.util.concurrent.Callable
 
 class XtendRuntime {
 	static val XTEND_LIB_PATTERN = Pattern.compile("org.eclipse.(xtend|xtext.xbase).(core|lib|lib.slim|lib.gwt)-(\\d.*?).jar")
@@ -24,10 +20,8 @@ class XtendRuntime {
 	}
 
 	def FileCollection inferXtendClasspath(FileCollection classpath) {
-		new LazyFileCollection() {
-
-			override createDelegate() {
-				for (file : classpath) {
+		project.files([|
+			for (file : classpath) {
 					val matcher = XTEND_LIB_PATTERN.matcher(file.name)
 					if (matcher.matches) {
 						val xtendVersion = matcher.group(3)
@@ -47,39 +41,12 @@ class XtendRuntime {
 				}
 				throw new GradleException(
 					'''Could not infer Xtend classpath, because no Xtend jar was found on the «classpath» classpath''')
-			}
-
-			override getBuildDependencies() {
-				switch (classpath) {
-					Buildable: classpath.buildDependencies
-					default: [#{}]
-				}
-			}
-		}
+		] as Callable<FileCollection>)
+		.builtBy(classpath.buildDependencies)
 	}
 
 	private def getPluginVersion() {
 		this.class.package.implementationVersion
-	}
-
-	private static abstract class LazyFileCollection implements FileCollection, MinimalFileSet {
-		var FileCollection delegate
-
-		@Delegate def FileCollection getDelegate() {
-			if (delegate == null)
-				delegate = createDelegate
-			delegate
-		}
-
-		def FileCollection createDelegate()
-
-		override getDisplayName() {
-			switch (delegate) {
-				MinimalFileSet: delegate.displayName
-				default: delegate.toString
-			}
-		}
-
 	}
 
 	private static val currentCompilerClassLoader = new ThreadLocal<URLClassLoader>() {
