@@ -11,8 +11,8 @@ import org.gradle.api.tasks.InputFiles
 import org.gradle.api.tasks.Nested
 import org.gradle.api.tasks.Optional
 import org.gradle.api.tasks.SkipWhenEmpty
-import org.gradle.api.tasks.compile.AbstractCompile
 import org.gradle.api.tasks.TaskAction
+import org.gradle.api.tasks.compile.AbstractCompile
 
 @Accessors
 class XtendCompile extends AbstractCompile {
@@ -24,12 +24,16 @@ class XtendCompile extends AbstractCompile {
 
 	@InputFiles @SkipWhenEmpty
 	def getXtendSources() {
-		getSrcDirs.filter[path.endsWith(".xtend")]
+		project.files(getSrcDirs).asFileTree.filter[path.endsWith(".xtend")]
+	}
+	
+	def getSrcDirs() {
+		srcDirs.srcDirs.filter[dir| dir != destinationDir].filter[isDirectory]
 	}
 
 	@TaskAction
 	override compile() {
-		val sourcePath = getSrcDirs.srcDirTrees.map[dir].filter[exists].map[absolutePath].join(File.pathSeparator)
+		val sourcePath = getSrcDirs.map[absolutePath].join(File.pathSeparator)
 		val compilerArguments = newArrayList(
 			"-cp",
 			classpath.filter[exists].asPath,
@@ -66,11 +70,6 @@ class XtendCompile extends AbstractCompile {
 	}
 
 	def enhance() {
-		val existingSourceFolders = getSrcDirs.srcDirTrees.map[dir].filter[exists]
-		for (folder : existingSourceFolders) {
-			if(!folder.directory) throw new GradleException('''«folder» is not a directory''')
-		}
-
 		val enhanceArguments = newArrayList(
 			"-c",
 			getClassesDir.absolutePath,
@@ -84,7 +83,7 @@ class XtendCompile extends AbstractCompile {
 		if (getOptions.xtendAsPrimaryDebugSource) {
 			enhanceArguments += #["-xtendAsPrimary"]
 		}
-		enhanceArguments += existingSourceFolders.map[path]
+		enhanceArguments += getSrcDirs.map[path]
 		invoke("org.xtend.enhance.batch.Main", "enhance", enhanceArguments)
 	}
 

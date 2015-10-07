@@ -13,11 +13,7 @@ class DefaultXtendSourceSet implements XtendSourceSet {
 
 	new(FileResolver fileResolver) {
 		this.fileResolver = fileResolver
-		this.srcDirs = new DefaultSourceDirectorySet("xtend", fileResolver) {
-			override getSrcDirTrees() {
-				super.srcDirTrees.filter[dir != getXtendOutputDir].toSet
-			}
-		}
+		this.srcDirs = new DefaultSourceDirectorySet("xtend", fileResolver)
 	}
 
 	override getXtend() {

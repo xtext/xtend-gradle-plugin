@@ -3,7 +3,7 @@ buildscript {
 		jcenter()
 	}
 	dependencies {
-		classpath 'org.xtend:xtend-gradle-plugin:0.4.3'
+		classpath 'org.xtend:xtend-gradle-plugin:0.4.9'
 		classpath 'com.github.oehme.sobula:sobula:0.4.1'
 	}
 }
@@ -14,9 +14,9 @@ subprojects {
 	apply plugin: 'com.github.oehme.sobula.bintray-release'
 
 	group = "org.xtend"
-	
+
 	bintray.pkg.name = "$project.group:$project.name"
-	
+
 	contacts {
 		"xtext@itemis.com" {
 			moniker "The Xtext team"
@@ -28,11 +28,11 @@ subprojects {
 	//TODO create bintray and central users
 	bintray.user = "oehme"
 	bintray.pkg.version.mavenCentralSync.user = "oehme"
-	
+
 	repositories {
     jcenter()
   }
-  
+
 	sourceCompatibility = 1.5
 }
 
@@ -40,7 +40,7 @@ configure(subprojects.findAll{p-> p.name.contains('plugin')}){
 	apply plugin: 'com.github.oehme.sobula.plugin-release'
 	apply plugin: 'java-gradle-plugin'
 	apply plugin: 'org.xtend.xtend'
-	
+
 	dependencies {
     compile 'org.eclipse.xtend:org.eclipse.xtend.lib:2.7.3'
   }
