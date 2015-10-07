@@ -4,7 +4,7 @@ buildscript {
 	}
 	dependencies {
 		classpath 'org.xtend:xtend-gradle-plugin:0.4.9'
-		classpath 'com.github.oehme.sobula:sobula:0.4.1'
+		classpath 'com.github.oehme.sobula:sobula:0.6.4'
 	}
 }
 
@@ -33,7 +33,7 @@ subprojects {
     jcenter()
   }
 
-	sourceCompatibility = 1.5
+	sourceCompatibility = 1.6
 }
 
 configure(subprojects.findAll{p-> p.name.contains('plugin')}){
