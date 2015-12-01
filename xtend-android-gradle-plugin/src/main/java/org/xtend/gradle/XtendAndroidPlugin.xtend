@@ -14,6 +14,8 @@ import org.xtend.gradle.tasks.XtendCompile
 
 import static extension org.xtend.gradle.GradleExtensions.*
 import org.xtend.gradle.tasks.XtendRuntime
+import org.gradle.api.DomainObjectSet
+import com.android.build.gradle.api.BaseVariant
 
 class XtendAndroidPlugin implements Plugin<Project> {
 
@@ -29,13 +31,15 @@ class XtendAndroidPlugin implements Plugin<Project> {
 		val xtend = project.extensions.getByType(XtendRuntime)
 		project.afterEvaluate [
 			val android = project.extensions.getByName("android") as BaseExtension
-			val variants = if (android instanceof AppExtension) {
-					android.applicationVariants
-				} else if (android instanceof LibraryExtension) {
-					android.libraryVariants
-				} else {
-					throw new GradleException('''Unknown packaging type «android.class.simpleName»''')
-				}
+			var variants = if (android instanceof AppExtension) {
+				val DomainObjectSet<? extends BaseVariant> appVariants = android.applicationVariants
+				appVariants
+			} else if (android instanceof LibraryExtension) {
+				val DomainObjectSet<? extends BaseVariant> libraryVariants = android.libraryVariants
+				libraryVariants
+			} else {
+				throw new GradleException('''Unknown packaging type «android.class.simpleName»''')
+			}
 			variants.all [ variant |
 				val compileTaskName = '''compile«variant.name.toFirstUpper»Xtend'''
 				val xtendSources = new DefaultXtendSourceSet(fileResolver)
